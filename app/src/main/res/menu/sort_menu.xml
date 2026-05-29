@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/current_lang_flag"
+        android:title="@string/menu_item_lang"
+        android:icon="@drawable/ic_polish"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/sort_spinner_item"
+        android:title="@string/menu_item_sort"
+        app:actionViewClass="android.widget.Spinner"
+        app:showAsAction="always" />
+</menu>

@@ -1,15 +1,19 @@
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.compose)
+//    alias(libs.plugins.kotlin.compose)
+//    alias(libs.plugins.kotlin.android)
+//    id("com.android.application")
+//    id("org.jetbrains.kotlin.android")
 }
 
 android {
     namespace = "com.krybed.todolist"
-    compileSdk {
-        version = release(36) {
-            minorApiLevel = 1
-        }
-    }
+//    compileSdk {
+//        version = release(36) {
+//            minorApiLevel = 1
+//        }
+//    }
+    compileSdk = 37
 
     defaultConfig {
         applicationId = "com.krybed.todolist"
@@ -31,15 +35,36 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
     buildFeatures {
-        compose = true
+//        compose = true
+        viewBinding = true
+    }
+
+    kotlin {
+        jvmToolchain(21)
     }
 }
 
 dependencies {
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.appcompat)
+    implementation(libs.material)
+    implementation(libs.androidx.constraintlayout)
+
+    implementation(libs.androidx.activity.ktx)
+    implementation(libs.fragment.ktx)
+
+    implementation(libs.lifecycle.livedata.ktx)
+    implementation(libs.lifecycle.viewmodel.ktx)
+
+    implementation(libs.navigation.fragment.ktx)
+    implementation(libs.navigation.ui.ktx)
+
+    testImplementation(libs.junit)
+
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.compose.material3)
@@ -49,6 +74,7 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
+
     testImplementation(libs.junit)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)

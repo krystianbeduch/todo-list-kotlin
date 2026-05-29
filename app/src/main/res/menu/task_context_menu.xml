@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/edit_task"
+        android:title="@string/edit_task" />
+    <item
+        android:id="@+id/delete_task"
+        android:title="@string/delete_task" />
+    <item
+        android:id="@+id/change_status"
+        android:title="@string/change_status" />
+    <item
+        android:id="@+id/add_attachment"
+        android:title="@string/add_attachment" />
+    <item
+        android:id="@+id/delete_attachment"
+        android:title="@string/delete_attachment" />
+    <item
+        android:id="@+id/show_attachment"
+        android:title="@string/show_attachment" />
+</menu>
