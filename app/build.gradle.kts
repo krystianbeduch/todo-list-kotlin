@@ -1,9 +1,12 @@
 plugins {
     alias(libs.plugins.android.application)
+    alias(libs.plugins.ksp)
+//    id("com.google.devtools.ksp")
 //    alias(libs.plugins.kotlin.compose)
 //    alias(libs.plugins.kotlin.android)
 //    id("com.android.application")
 //    id("org.jetbrains.kotlin.android")
+
 }
 
 android {
@@ -62,6 +65,10 @@ dependencies {
 
     implementation(libs.navigation.fragment.ktx)
     implementation(libs.navigation.ui.ktx)
+
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    ksp(libs.androidx.room.compiler)
 
     testImplementation(libs.junit)
 

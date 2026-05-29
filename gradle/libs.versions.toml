@@ -9,7 +9,7 @@ activityCompose = "1.13.0"
 kotlin = "2.3.21"
 composeBom = "2026.05.01"
 
-ksp = "2.0.21-1.0.27"
+ksp = "2.3.9"
 appcompat = "1.7.1"
 material = "1.14.0"
 constraintlayout = "2.2.1"
@@ -30,7 +30,8 @@ navigationUi = "2.9.0"
 
 activityKtx = "1.13.0"
 
-roomVersion = "2.7.1"
+roomRuntime = "2.8.4"
+roomVersion = "2.8.4"
 simpleXml = "2.7.1"
 
 [libraries]
@@ -63,6 +64,9 @@ lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx
 navigation-fragment-ktx = { module = "androidx.navigation:navigation-fragment-ktx", version.ref = "navigation" }
 navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "navigation" }
 
+androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref = "roomRuntime" }
+androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomRuntime" }
+androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }
 
 
 
@@ -70,3 +74,4 @@ navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.
 android-application = { id = "com.android.application", version.ref = "agp" }
 #kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }

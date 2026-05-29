@@ -1,0 +1,33 @@
+package com.krybed.todolist.data.model.enums
+
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.ForeignKey
+import androidx.room.Index
+import androidx.room.PrimaryKey
+import com.krybed.todolist.data.model.Task
+
+@Entity(
+    foreignKeys = [
+        ForeignKey(
+            entity = Task::class,
+            parentColumns = ["id"],      // PK Task
+            childColumns = ["task_id"],  // FK Attachment
+            onDelete = ForeignKey.Companion.CASCADE
+        )
+    ],
+    indices = [Index("task_id")]
+)
+data class Attachment (
+
+    @PrimaryKey(autoGenerate = true)
+    var id: Int = 0,
+
+    @ColumnInfo(name = "task_id")
+    var taskId: Int,
+
+    var filename: String,
+
+    @ColumnInfo(name = "file_path")
+    var filePath: String
+)
