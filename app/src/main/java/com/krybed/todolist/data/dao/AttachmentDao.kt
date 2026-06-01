@@ -5,7 +5,7 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.krybed.todolist.data.model.enums.Attachment
+import com.krybed.todolist.data.model.Attachment
 
 @Dao
 interface AttachmentDao {

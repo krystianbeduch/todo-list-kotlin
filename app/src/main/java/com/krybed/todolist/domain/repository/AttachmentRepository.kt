@@ -2,7 +2,7 @@ package com.krybed.todolist.domain.repository
 
 import android.content.Context
 import com.krybed.todolist.data.db.AppDatabase
-import com.krybed.todolist.data.model.enums.Attachment
+import com.krybed.todolist.data.model.Attachment
 
 class AttachmentRepository(ctx: Context) {
 

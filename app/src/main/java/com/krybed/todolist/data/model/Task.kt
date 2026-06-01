@@ -4,7 +4,6 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Ignore
 import androidx.room.PrimaryKey
-import com.krybed.todolist.data.model.enums.Attachment
 import com.krybed.todolist.data.model.enums.NotificationType
 import com.krybed.todolist.data.model.enums.Priority
 import java.time.LocalDateTime
@@ -28,7 +27,7 @@ data class Task (
     var createdAt: LocalDateTime = LocalDateTime.now()
 ) {
     @Ignore
-    var attachments: List<Attachment> = emptyList()
+    var attachments: MutableList<Attachment> = mutableListOf()
 
     @Ignore
     var notificationType: NotificationType = NotificationType.NONE
@@ -40,5 +39,21 @@ data class Task (
         const val FIELD_PRIORITY = "priority"
         const val FIELD_IS_DONE = "isDone"
         const val FIELD_CREATED_AT = "createdAt"
+
+        fun create(
+            title: String,
+            deadline: LocalDateTime,
+            isDone: Boolean,
+            priority: Priority,
+            createdAt: LocalDateTime = LocalDateTime.now()
+        ): Task {
+            return Task(
+                title = title,
+                deadline = deadline,
+                isDone = isDone,
+                priority = priority,
+                createdAt = createdAt
+            )
+        }
     }
 }

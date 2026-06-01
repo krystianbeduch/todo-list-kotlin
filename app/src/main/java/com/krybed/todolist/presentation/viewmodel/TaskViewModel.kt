@@ -8,13 +8,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import com.krybed.todolist.data.model.Task
-import com.krybed.todolist.data.model.enums.Attachment
+import com.krybed.todolist.data.model.Attachment
 import com.krybed.todolist.data.model.enums.FileType
 import com.krybed.todolist.data.model.enums.SortType
 import com.krybed.todolist.domain.repository.AttachmentRepository
 import com.krybed.todolist.domain.repository.TaskRepository
 import com.krybed.todolist.util.file.FileService
-import java.net.URI
 import java.util.concurrent.Executors
 
 class TaskViewModel(application: Application) : AndroidViewModel(application) {
@@ -49,12 +48,15 @@ class TaskViewModel(application: Application) : AndroidViewModel(application) {
 
             executor.execute {
                 list.forEach { task ->
-                    task.attachments = attachmentRepository.getByTaskId(task.id)
+                    task.attachments = attachmentRepository.getByTaskId(task.id).toMutableList()
                 }
                 sortTasks(list.toMutableList(), currentSortType)
             }
         }
     }
+
+    fun getTaskById(id:Int): LiveData<Task?> =
+        taskRepository.getById(id)
 
     fun insert(task: Task) {
         executor.execute {
