@@ -55,7 +55,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -140,7 +139,7 @@ class MainActivity : AppCompatActivity() {
 
         AlertDialog.Builder(this)
             .setTitle(getString(R.string.select_file_format))
-            .setItems(formats) { dialog, which ->
+            .setItems(formats) { _, which ->
                 val selectedFormat = FileType.entries[which]
                 if (isImport) {
                     currentImportFileType = selectedFormat

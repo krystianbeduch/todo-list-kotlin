@@ -151,6 +151,8 @@ class TaskFormHelper (
                 return view
             }
         }
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+        prioritySpinner.adapter = adapter
     }
 
     private fun showDateTimePicker() {

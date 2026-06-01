@@ -67,14 +67,14 @@ class TaskActivity : AppCompatActivity() {
                 )
             }
         }
+    }
 
-        fun attachBaseContext(newBase: Context) {
-            super.attachBaseContext(LocalHelper.applySavedLocale(newBase))
-        }
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(LocalHelper.applySavedLocale(newBase))
+    }
 
-        fun onDestroy() {
-            super.onDestroy()
-            taskToEdit = null
-        }
+    override fun onDestroy() {
+        super.onDestroy()
+        taskToEdit = null
     }
 }

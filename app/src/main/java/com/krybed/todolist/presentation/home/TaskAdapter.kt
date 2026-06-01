@@ -96,6 +96,13 @@ class TaskAdapter(
         }
     }
 
+    fun notifyTaskChanged(taskId: Int) {
+        val position = tasks.indexOfFirst { it.id == taskId }
+        if (position != -1) {
+            notifyItemChanged(position)
+        }
+    }
+
     class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val titleView: TextView = itemView.findViewById(R.id.taskTitle)
         val deadlineView: TextView = itemView.findViewById(R.id.taskDeadline)

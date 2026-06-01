@@ -3,6 +3,8 @@ package com.krybed.todolist.presentation.viewmodel
 import android.app.Application
 import android.content.Context
 import android.net.Uri
+import android.os.Handler
+import android.os.Looper
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
@@ -50,7 +52,10 @@ class TaskViewModel(application: Application) : AndroidViewModel(application) {
                 list.forEach { task ->
                     task.attachments = attachmentRepository.getByTaskId(task.id).toMutableList()
                 }
-                sortTasks(list.toMutableList(), currentSortType)
+
+                Handler(Looper.getMainLooper()).post {
+                    sortTasks(list.toMutableList(), currentSortType)
+                }
             }
         }
     }
@@ -92,9 +97,9 @@ class TaskViewModel(application: Application) : AndroidViewModel(application) {
 
         val comparator = when (sortType) {
             SortType.TITLE -> compareBy<Task> { it.title.lowercase() }
-            SortType.DEADLINE -> compareBy<Task> { it.deadline }
-            SortType.PRIORITY -> compareBy<Task> { it.priority }
-            SortType.STATUS -> compareBy<Task> { it.isDone }
+            SortType.DEADLINE -> compareBy { it.deadline }
+            SortType.PRIORITY -> compareBy { it.priority }
+            SortType.STATUS -> compareBy { it.isDone }
             else -> compareByDescending { it.createdAt }
         }
 
@@ -106,14 +111,20 @@ class TaskViewModel(application: Application) : AndroidViewModel(application) {
     fun addAttachmentToTask(attachment: Attachment) {
         executor.execute {
             attachmentRepository.insert(attachment)
-            loadTasksBySort(currentSortType)
+
+            Handler(Looper.getMainLooper()).post {
+                loadTasksBySort(currentSortType)
+            }
         }
     }
 
     fun deleteAttachment(attachment: Attachment) {
         executor.execute {
             attachmentRepository.delete(attachment)
-            loadTasksBySort(currentSortType)
+
+            Handler(Looper.getMainLooper()).post {
+                loadTasksBySort(currentSortType)
+            }
         }
     }
 
