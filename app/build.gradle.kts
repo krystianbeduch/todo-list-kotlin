@@ -70,6 +70,9 @@ dependencies {
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
 
+    implementation(libs.gson)
+    implementation(libs.simple.xml)
+
     testImplementation(libs.junit)
 
     implementation(platform(libs.androidx.compose.bom))
