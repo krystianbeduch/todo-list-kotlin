@@ -6,6 +6,7 @@ plugins {
 //    alias(libs.plugins.kotlin.android)
 //    id("com.android.application")
 //    id("org.jetbrains.kotlin.android")
+    alias(libs.plugins.kotlin.serialization)
 
 }
 
@@ -69,7 +70,9 @@ dependencies {
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
 
-    implementation(libs.gson)
+//    implementation(libs.gson)
+
+    implementation(libs.kotlinx.serialization.json)
     implementation(libs.simple.xml)
 
     testImplementation(libs.junit)

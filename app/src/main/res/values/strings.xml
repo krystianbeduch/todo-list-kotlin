@@ -24,6 +24,7 @@
     <string name="menu_import_tasks">Importuj zadania</string>
     <string name="menu_export_tasks">Eksportuj zadania</string>
     <string name="menu_change_lang">Zmień język</string>
+    <string name="menu_delete_all">Usuń wszystko</string>
     <string name="menu_item_lang">Język</string>
     <string name="menu_item_sort">Sortuj</string>
 
@@ -33,6 +34,8 @@
     <string name="select_file_format">Wybierz format pliku:</string>
     <string name="select_file">Wybierz plik </string>
     <string name="select_lang">Wybierz język:</string>
+    <string name="delete_all_title">Usuwanie wszystkich zadań</string>
+    <string name="delete_all_message">Czy na pewno chcesz usunąć wszystkie zadania</string>
 
     <!-- EditActivity -->
     <string name="error_no_task_id">Błąd: brak ID zadania</string>

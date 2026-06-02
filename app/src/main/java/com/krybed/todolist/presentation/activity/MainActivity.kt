@@ -10,6 +10,7 @@ import android.view.View
 import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
@@ -19,20 +20,35 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import com.krybed.todolist.R
+import com.krybed.todolist.data.db.AppDatabase
+import com.krybed.todolist.data.mapper.AttachmentMapper
+import com.krybed.todolist.data.mapper.TaskMapper
 import com.krybed.todolist.data.model.enums.FileType
+import com.krybed.todolist.data.model.enums.Priority
+import com.krybed.todolist.data.repository.AttachmentRepositoryImpl
+import com.krybed.todolist.data.repository.TaskRepositoryImpl
 import com.krybed.todolist.databinding.ActivityMainBinding
+import com.krybed.todolist.domain.model.Task
+import com.krybed.todolist.presentation.AppContainer
 import com.krybed.todolist.presentation.viewmodel.TaskViewModel
+import com.krybed.todolist.presentation.viewmodel.TaskViewModelFactory
 import com.krybed.todolist.util.file.FileService
 import com.krybed.todolist.util.lang.LocalHelper
 import kotlinx.coroutines.launch
+import java.time.LocalDateTime
+import java.time.LocalTime
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var taskViewModel: TaskViewModel
+//    private lateinit var taskViewModel: TaskViewModel
+    private val taskViewModel: TaskViewModel by viewModels {
+        AppContainer.provideTaskViewModelFactory(applicationContext)
+    }
     private var currentImportFileType: FileType? = null
 
     private val filePickerLauncher = registerForActivityResult(
@@ -74,9 +90,16 @@ class MainActivity : AppCompatActivity() {
             R.id.navigation_notifications
         ).build()
 
-        val navController = this.findNavController(
+//        val navController = this.findNavController(
+//            R.id.nav_host_fragment_activity_main
+//        )
+
+        val navHostFragment = supportFragmentManager.findFragmentById(
             R.id.nav_host_fragment_activity_main
-        )
+        ) as NavHostFragment
+
+        val navController = navHostFragment.navController
+
         NavigationUI.setupActionBarWithNavController(
             this,
             navController,
@@ -84,7 +107,32 @@ class MainActivity : AppCompatActivity() {
         )
         NavigationUI.setupWithNavController(navView, navController)
 
-        taskViewModel = ViewModelProvider(this)[TaskViewModel::class.java]
+//        taskViewModel = ViewModelProvider(this)[TaskViewModel::class.java]
+
+//        val ctx = applicationContext
+//        val database = AppDatabase.getInstance(ctx)
+//        val attachmentMapper = AttachmentMapper()
+//
+//        val taskRepository = TaskRepositoryImpl(
+//            database.taskDao(),
+//            TaskMapper(),
+//            attachmentMapper
+//        )
+//
+//        val attachmentRepository = AttachmentRepositoryImpl(
+//            database.attachmentDao(),
+//            attachmentMapper
+//        )
+//
+//        val factory = TaskViewModelFactory(taskRepository, attachmentRepository)
+//        taskViewModel = ViewModelProvider(
+//            this, factory
+//        )[TaskViewModel::class.java]
+
+//        taskViewModel = ViewModelProvider(
+//            this,
+//            AppContainer.provideTaskViewModelFactory(applicationContext)
+//        )[TaskViewModel::class.java]
 
 //        taskViewModel.tasksForNotification.observe(this) { tasks ->
 //            val badge = navView.getOrCreateBadge(R.id.navigation_notifications)
@@ -96,6 +144,10 @@ class MainActivity : AppCompatActivity() {
 //                badge.isVisible = false
 //            }
 //        }
+
+        // SAMPLE DATA
+        seedDummyTasksIfNeeded()
+
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 taskViewModel.tasksForNotification.collect { tasks ->
@@ -145,6 +197,10 @@ class MainActivity : AppCompatActivity() {
                 }
                 R.id.change_language -> {
                     LocalHelper.showChangeLanguageDialog(this)
+                    true
+                }
+                R.id.menu_delete_all -> {
+                    showDeleteAllDialog()
                     true
                 }
                 else -> false
@@ -206,6 +262,85 @@ class MainActivity : AppCompatActivity() {
                 )
             }
         }
+    }
+
+    private fun showDeleteAllDialog() {
+        AlertDialog.Builder(this)
+            .setTitle(getString(R.string.delete_all_title))
+            .setMessage(getString(R.string.delete_all_message))
+            .setPositiveButton(getString(R.string.yes)) { _, _ ->
+                taskViewModel.deleteAll()
+            }
+            .setNegativeButton(getString(R.string.no), null)
+            .show()
+    }
+
+    private fun seedDummyTasksIfNeeded() {
+        lifecycleScope.launch {
+            val tasks = taskViewModel.getAllOnce()
+            if (tasks.isEmpty()) {
+                insertDummyTasks()
+            }
+        }
+    }
+
+    private fun insertDummyTasks() {
+        taskViewModel.insert(
+            Task.create(
+                "Do the shopping",
+                LocalDateTime.now().plusDays(5).with(LocalTime.of(12, 0)),
+                true,
+                Priority.HIGH
+            )
+        )
+        taskViewModel.insert(
+            Task.create(
+                "Gym session",
+                LocalDateTime.now().plusDays(3).with(LocalTime.of(14, 30)),
+                false,
+                Priority.MEDIUM
+            )
+        )
+        taskViewModel.insert(
+            Task.create(
+                "Team meeting",
+                LocalDateTime.now().plusDays(15).with(LocalTime.of(7, 25)),
+                false,
+                Priority.MEDIUM
+            )
+        )
+        taskViewModel.insert(
+            Task.create(
+                "Dentist appointment",
+                LocalDateTime.now().plusDays(25).with(LocalTime.of(9, 50)),
+                false,
+                Priority.LOW
+            )
+        )
+        taskViewModel.insert(
+            Task.create(
+                "Project deadline",
+                LocalDateTime.now().plusDays(2).with(LocalTime.of(18, 0)),
+                true,
+                Priority.LOW
+            )
+        )
+        taskViewModel.insert(
+            Task.create(
+                "Finish reading the book",
+                LocalDateTime.now().with(LocalTime.of(23, 59)),
+                false,
+                Priority.HIGH
+            )
+        )
+        taskViewModel.insert(
+            Task.create(
+                "Water the plants",
+                LocalDateTime.now().minusDays(3),
+                false,
+                Priority.HIGH
+            )
+        )
     }
 
     override fun onDestroy() {

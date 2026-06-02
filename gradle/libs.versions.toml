@@ -26,7 +26,8 @@ navigationUi = "2.9.0"
 
 
 #coreTesting = "2.2.0"
-gson = "2.14.0"
+#gson = "2.14.0"
+kotlinxSerializationJson = "1.11.0"
 simpleXml = "2.7.1"
 
 activityKtx = "1.13.0"
@@ -69,7 +70,8 @@ androidx-room-compiler = { module = "androidx.room:room-compiler", version.ref =
 androidx-room-ktx = { module = "androidx.room:room-ktx", version.ref = "roomRuntime" }
 androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "roomRuntime" }
 
-gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
+#gson = { module = "com.google.code.gson:gson", version.ref = "gson" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
 simple-xml = { module = "org.simpleframework:simple-xml", version.ref = "simpleXml" }
 
 
@@ -79,3 +81,4 @@ android-application = { id = "com.android.application", version.ref = "agp" }
 #kotlin-compose = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
+kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }

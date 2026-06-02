@@ -18,12 +18,15 @@ import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.core.net.toUri
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
@@ -41,7 +44,9 @@ import com.krybed.todolist.data.repository.TaskRepositoryImpl
 import com.krybed.todolist.databinding.FragmentHomeBinding
 import com.krybed.todolist.domain.model.Attachment
 import com.krybed.todolist.domain.model.Task
+import com.krybed.todolist.presentation.AppContainer
 import com.krybed.todolist.presentation.activity.TaskActivity
+import com.krybed.todolist.presentation.applyRecyclerViewInsets
 import com.krybed.todolist.presentation.viewmodel.TaskViewModel
 import com.krybed.todolist.presentation.viewmodel.TaskViewModelFactory
 import com.krybed.todolist.util.file.FileService
@@ -51,6 +56,7 @@ import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.util.Locale
+import kotlin.getValue
 
 class HomeFragment : Fragment() {
 
@@ -58,7 +64,10 @@ class HomeFragment : Fragment() {
     private val b get() = binding!!
 
     private lateinit var taskAdapter: TaskAdapter
-    private lateinit var taskViewModel: TaskViewModel
+//    private lateinit var taskViewModel: TaskViewModel
+    private val taskViewModel: TaskViewModel by activityViewModels {
+        AppContainer.provideTaskViewModelFactory(requireContext().applicationContext)
+    }
 
     private var currentAttachmentTask: Task? = null
 
@@ -83,8 +92,6 @@ class HomeFragment : Fragment() {
                         filePath = localUri.toString()
                     )
 
-//                    task.attachments.add(attachment)
-//                    taskAdapter.notifyTaskChanged(task.id)
                     taskViewModel.addAttachmentToTask(attachment)
 
                     Log.i("Attachment", "Selected file: $localUri")
@@ -109,76 +116,31 @@ class HomeFragment : Fragment() {
             false
         )
 
-        val ctx = requireContext().applicationContext
-        val database = AppDatabase.getInstance(ctx)
-        val attachmentMapper = AttachmentMapper()
+//        val ctx = requireContext().applicationContext
+//        val database = AppDatabase.getInstance(ctx)
+//        val attachmentMapper = AttachmentMapper()
 
-        val taskRepository = TaskRepositoryImpl(
-            database.taskDao(),
-            TaskMapper(),
-            attachmentMapper
-        )
+//        val taskRepository = TaskRepositoryImpl(
+//            database.taskDao(),
+//            TaskMapper(),
+//            attachmentMapper
+//        )
 
-        val attachmentRepository = AttachmentRepositoryImpl(
-            database.attachmentDao(),
-            attachmentMapper
-        )
+//        val attachmentRepository = AttachmentRepositoryImpl(
+//            database.attachmentDao(),
+//            attachmentMapper
+//        )
 
-        val factory = TaskViewModelFactory(taskRepository, attachmentRepository)
+//        val factory = TaskViewModelFactory(taskRepository, attachmentRepository)
 
-        taskViewModel = ViewModelProvider(
-            requireActivity(),
-            factory
-        )[TaskViewModel::class.java]
+//        taskViewModel = ViewModelProvider(
+//            requireActivity(),
+//            factory
+//        )[TaskViewModel::class.java]
 
         NotificationUtils.createNotificationChannel(requireContext())
         initRecyclerView()
 
-//        taskViewModel.tasks.observe(viewLifecycleOwner) { tasks ->
-//            val safeTasks = tasks ?: emptyList()
-//            taskAdapter.updateTasks(safeTasks)
-//
-//            val checked = taskViewModel.notificationChecked.value ?: false
-//            checkForUpcomingDeadlines(safeTasks, checked)
-//
-//            if (!checked) {
-//                taskViewModel.markNotificationChecked()
-//            }
-
-//            taskViewModel.hasInsertedDummy.observe(viewLifecycleOwner) { hasInserted ->
-//                if ((hasInserted == null || !hasInserted) && safeTasks.isEmpty()) {
-//                    insertDummyTasks()
-//                    taskViewModel.markDummyInserted()
-//                }
-//            }
-//
-//            taskViewModel.notificationChecked.observe(viewLifecycleOwner) { checked ->
-//                if (checked != null) {
-//                    checkForUpcomingDeadlines(safeTasks, checked)
-//                    if (!checked) {
-//                        taskViewModel.markNotificationChecked()
-//                    }
-//                }
-//            }
-//        }
-
-//        taskViewModel.hasInsertedDummy.observe(viewLifecycleOwner) { hasInserted ->
-//            val safeTasks = taskViewModel.tasks.value ?: emptyList()
-//            if ((hasInserted == null || !hasInserted) && safeTasks.isEmpty()) {
-//                insertDummyTasks()
-//                taskViewModel.markDummyInserted()
-//            }
-//        }
-
-//        taskViewModel.notificationChecked.observe(viewLifecycleOwner) { checked ->
-//            val safeTasks = taskViewModel.tasks.value ?: emptyList()
-//            if (checked != null) {
-//                checkForUpcomingDeadlines(safeTasks, checked)
-//                if (!checked) {
-//                    taskViewModel.markNotificationChecked()
-//                }
-//            }
-//        }
         return b.root
     }
 
@@ -188,17 +150,21 @@ class HomeFragment : Fragment() {
     ) {
         super.onViewCreated(view, savedInstanceState)
 
-        ViewCompat.setOnApplyWindowInsetsListener(b.tasksRecyclerView) { recyclerView, insets ->
-            val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            recyclerView.setPadding(
-                recyclerView.paddingLeft,
-                bars.top,
-                recyclerView.paddingRight,
-                bars.bottom + dpToPx(72)
-            )
-            insets
-        }
-        ViewCompat.requestApplyInsets(b.tasksRecyclerView)
+//        b.tasksRecyclerView.applyRecyclerViewInsets()
+
+        //
+//        ViewCompat.setOnApplyWindowInsetsListener(b.tasksRecyclerView) { recyclerView, insets ->
+//            val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+//            recyclerView.setPadding(
+//                recyclerView.paddingLeft,
+//                bars.top,
+//                recyclerView.paddingRight,
+//                bars.bottom + dpToPx(72)
+//            )
+//            insets
+//        }
+//        ViewCompat.requestApplyInsets(b.tasksRecyclerView)
+        //
 
         observeViewModel()
         setupMenu()
@@ -217,16 +183,6 @@ class HomeFragment : Fragment() {
 
                         if (!checked) {
                             taskViewModel.markNotificationChecked()
-                        }
-                    }
-                }
-
-                launch {
-                    taskViewModel.hasInsertedDummy.collect { hasInserted ->
-                        val safeTasks = taskViewModel.tasks.value
-                        if (!hasInserted && safeTasks.isEmpty()) {
-                            insertDummyTasks()
-                            taskViewModel.markDummyInserted()
                         }
                     }
                 }
@@ -280,10 +236,6 @@ class HomeFragment : Fragment() {
                                 selectedName
                             )
                             taskViewModel.loadTasksBySort(selected)
-//                            val currentTasks = taskViewModel.tasks.value
-//                            if (currentTasks != null) {
-//                                taskViewModel.sortTasks(currentTasks.toMutableList(), selected)
-//                            }
                         }
 
                         override fun onNothingSelected(parent: AdapterView<*>?) = Unit
@@ -314,7 +266,6 @@ class HomeFragment : Fragment() {
         (dp * resources.displayMetrics.density).toInt()
 
     private fun initRecyclerView() {
-//        b.tasksRecyclerView.layoutManager = LinearLayoutManager(context)
         b.tasksRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         taskAdapter = TaskAdapter(emptyList(), object : TaskAdapter.OnTaskClickListener {
 
@@ -388,7 +339,7 @@ class HomeFragment : Fragment() {
                             .setMessage(getString(R.string.delete_attachment_alertdialog_message))
                             .setPositiveButton(getString(R.string.yes)) { _, _ ->
                                 Log.i("Delete attachment", selected.filename)
-                                deleteAttachment(task, selected)
+                                deleteAttachment(selected)
                             }
                             .setNegativeButton(
                                 getString(R.string.no)) { _, _ ->
@@ -430,66 +381,6 @@ class HomeFragment : Fragment() {
         })
         b.tasksRecyclerView.adapter = taskAdapter
     }
-
-    private fun insertDummyTasks() {
-        taskViewModel.insert(
-            Task.create(
-                "Do the shopping",
-                LocalDateTime.now().plusDays(5).with(LocalTime.of(12, 0)),
-                true,
-                Priority.HIGH
-            )
-        )
-        taskViewModel.insert(
-            Task.create(
-                "Gym session",
-                LocalDateTime.now().plusDays(3).with(LocalTime.of(14, 30)),
-                false,
-                Priority.MEDIUM
-            )
-        )
-        taskViewModel.insert(
-            Task.create(
-                "Team meeting",
-                LocalDateTime.now().plusDays(15).with(LocalTime.of(7, 25)),
-                false,
-                Priority.MEDIUM
-            )
-        )
-        taskViewModel.insert(
-            Task.create(
-                "Dentist appointment",
-                LocalDateTime.now().plusDays(25).with(LocalTime.of(9, 50)),
-                false,
-                Priority.LOW
-            )
-        )
-        taskViewModel.insert(
-            Task.create(
-                "Project deadline",
-                LocalDateTime.now().plusDays(2).with(LocalTime.of(18, 0)),
-                true,
-                Priority.LOW
-            )
-        )
-        taskViewModel.insert(
-            Task.create(
-                "Finish reading the book",
-                LocalDateTime.now().with(LocalTime.of(23, 59)),
-                false,
-                Priority.HIGH
-            )
-        )
-        taskViewModel.insert(
-            Task.create(
-                "Water the plants",
-                LocalDateTime.now().minusDays(3),
-                false,
-                Priority.HIGH
-            )
-        )
-    }
-
     private fun openAttachment(ctx: Context, attachment: Attachment) {
         try {
             val uri = attachment.filePath.toUri()
@@ -511,16 +402,11 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun deleteAttachment(task: Task, attachment: Attachment) {
+    private fun deleteAttachment(attachment: Attachment) {
         if (FileService.deleteFileFromInternalStorage(
                 requireContext(), attachment.filePath
         )) {
-//            task.attachments.removeAll {
-//                it.filePath == attachment.filePath && it.filename == attachment.filename
-//            }
-//            taskAdapter.notifyTaskChanged(task.id)
             taskViewModel.deleteAttachment(attachment)
-
             Toast.makeText(
                 requireContext(),
                 getString(R.string.attachment_deleted),
@@ -561,23 +447,6 @@ class HomeFragment : Fragment() {
                         )
                     }
                 }
-
-//                if (task.deadline.isBefore(now)) {
-//                    task.notificationType = NotificationType.OVERDUE
-//                    tasksToNotify.add(task)
-//                    if (!isNotificationShown) {
-//                        NotificationUtils.showTaskNotification(requireContext(), task)
-//                    }
-//                }
-//                else if (task.deadline.isAfter(now) &&
-//                    task.deadline.isBefore(threshold)
-//                ) {
-//                    task.notificationType = NotificationType.UPCOMING
-//                    tasksToNotify.add(task)
-//                    if (!isNotificationShown) {
-//                        NotificationUtils.showTaskNotification(requireContext(), task)
-//                    }
-//                }
             }
         }
         taskViewModel.updateTasksForNotification(tasksToNotify)

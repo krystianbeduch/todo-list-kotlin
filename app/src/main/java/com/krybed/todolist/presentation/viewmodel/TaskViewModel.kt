@@ -38,13 +38,13 @@ class TaskViewModel(
 ) : ViewModel() {
 
     private val _sortType = MutableStateFlow(SortType.CREATED_DATE)
-    val sortType: StateFlow<SortType> = _sortType.asStateFlow()
+//    val sortType: StateFlow<SortType> = _sortType.asStateFlow()
 
     private val _tasksForNotification = MutableStateFlow<List<Task>>(emptyList())
     val tasksForNotification: StateFlow<List<Task>> = _tasksForNotification.asStateFlow()
 
-    private val _hasInsertedDummy = MutableStateFlow(false)
-    val hasInsertedDummy: StateFlow<Boolean> = _hasInsertedDummy.asStateFlow()
+//    private val _hasInsertedDummy = MutableStateFlow(false)
+//    val hasInsertedDummy: StateFlow<Boolean> = _hasInsertedDummy.asStateFlow()
 
     private val _notificationChecked = MutableStateFlow(false)
     val notificationChecked: StateFlow<Boolean> = _notificationChecked.asStateFlow()
@@ -68,9 +68,9 @@ class TaskViewModel(
 
     //    private val taskRepository = TaskRepository(application)
 //    private val attachmentRepository = AttachmentRepository(application)
-    private val executor = Executors.newSingleThreadExecutor()
-    private var currentSource: LiveData<List<TaskEntity>>? = null
-    private var currentSortType: SortType = SortType.CREATED_DATE
+//    private val executor = Executors.newSingleThreadExecutor()
+//    private var currentSource: LiveData<List<TaskEntity>>? = null
+//    private var currentSortType: SortType = SortType.CREATED_DATE
 
 //    init {
 //        loadTasksBySort(SortType.CREATED_DATE)
@@ -104,6 +104,9 @@ class TaskViewModel(
     fun loadTasksBySort(sortType: SortType) {
         _sortType.value = sortType
     }
+
+    suspend fun getAllOnce(): List<Task> =
+        taskRepository.getAll()
 
     fun getTaskById(id: Int): Flow<Task?> =
         taskRepository.getById(id)
@@ -146,6 +149,12 @@ class TaskViewModel(
 //            taskRepository.delete(task)
 //        }
 //    }
+
+    fun deleteAll() {
+        viewModelScope.launch {
+            taskRepository.deleteAll()
+        }
+    }
 
     fun changeStatus(task: Task) {
         viewModelScope.launch {
@@ -207,9 +216,9 @@ class TaskViewModel(
 //        tasksForNotification.value = tasks
 //    }
 
-    fun markDummyInserted() {
-        _hasInsertedDummy.value = true
-    }
+//    fun markDummyInserted() {
+//        _hasInsertedDummy.value = true
+//    }
 
 //    fun markDummyInserted() {
 //        hasInsertedDummy.value = true
@@ -276,8 +285,8 @@ class TaskViewModel(
         return tasks.sortedWith(comparator)
     }
 
-    override fun onCleared() {
-        super.onCleared()
-        executor.shutdown()
-    }
+//    override fun onCleared() {
+//        super.onCleared()
+//        executor.shutdown()
+//    }
 }

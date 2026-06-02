@@ -13,23 +13,21 @@ import android.provider.OpenableColumns
 import android.util.Log
 import android.widget.Toast
 import androidx.core.content.FileProvider
-import com.google.gson.GsonBuilder
-import com.google.gson.reflect.TypeToken
+import androidx.core.net.toUri
 import com.krybed.todolist.R
-import com.krybed.todolist.data.db.AppDatabase
-import com.krybed.todolist.data.model.TaskEntity
 import com.krybed.todolist.data.model.enums.FileType
 import com.krybed.todolist.data.model.enums.Priority
 import com.krybed.todolist.domain.model.Task
 import com.krybed.todolist.domain.repository.TaskRepository
 import com.krybed.todolist.util.converter.Converters
-import com.krybed.todolist.util.file.json.TaskTypeJsonAdapter
+import com.krybed.todolist.util.file.json.TaskJsonDto
+import com.krybed.todolist.util.file.json.TaskJsonMapper.toDomain
+import com.krybed.todolist.util.file.json.TaskJsonMapper.toJsonDto
 import com.krybed.todolist.util.file.xml.TaskXml
 import com.krybed.todolist.util.file.xml.TaskXmlWrapper
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlinx.serialization.json.Json
 import org.simpleframework.xml.Serializer
 import org.simpleframework.xml.core.Persister
 import java.io.BufferedReader
@@ -39,14 +37,14 @@ import java.io.IOException
 import java.io.InputStream
 import java.io.InputStreamReader
 import java.io.OutputStream
-import java.lang.reflect.Type
 import java.nio.charset.StandardCharsets
-import java.util.concurrent.Executors
-import androidx.core.net.toUri
 
 object FileService {
 
-//    private val executor = Executors.newSingleThreadExecutor()
+    private val json = Json {
+        prettyPrint = true
+        ignoreUnknownKeys = true
+    }
 
     suspend fun exportTasksToCsv(
         ctx: Context,
@@ -126,17 +124,18 @@ object FileService {
         taskRepository: TaskRepository
     ) = withContext(Dispatchers.IO) {
         val allTasks = taskRepository.getAll()
-        val gson = GsonBuilder()
-            .registerTypeAdapter(Task::class.java, TaskTypeJsonAdapter())
-            .setPrettyPrinting()
-            .create()
+        val dtoList = allTasks.map { it.toJsonDto() }
 
         writeToFile(ctx, FileType.JSON) { outputStream ->
-            outputStream.write(
-                gson.toJson(
-                    allTasks
-                ).toByteArray(StandardCharsets.UTF_8)
-            )
+            outputStream.write(json.encodeToString(
+                    dtoList
+                ).toByteArray(StandardCharsets.UTF_8))
+
+//            outputStream.write(
+//                gson.toJson(
+//                    allTasks
+//                ).toByteArray(StandardCharsets.UTF_8)
+//            )
         }
     }
 
@@ -153,12 +152,16 @@ object FileService {
             BufferedReader(InputStreamReader(
                 inputStream, StandardCharsets.UTF_8
             )).use { reader ->
-                val taskListType: Type = object : TypeToken<List<Task>>(){}.type
+//                val taskListType: Type = object : TypeToken<List<Task>>(){}.type
+                val jsonString = reader.readText()
+                val dtoList = json.decodeFromString<List<TaskJsonDto>>(jsonString)
+                dtoList.map { it.toDomain() }
+
 //                tasks.addAll(gson.fromJson(reader, taskListType))
-                val gson = GsonBuilder()
-                    .registerTypeAdapter(Task::class.java, TaskTypeJsonAdapter())
-                    .create()
-                gson.fromJson<List<Task>>(reader, taskListType)
+//                val gson = GsonBuilder()
+//                    .registerTypeAdapter(Task::class.java, TaskTypeJsonAdapter())
+//                    .create()
+//                gson.fromJson<List<Task>>(reader, taskListType)
 
 //                    val db = AppDatabase.getInstance(ctx.applicationContext)
 //                    for (task in tasks) {
