@@ -17,13 +17,19 @@ import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
 import com.krybed.todolist.R
 import com.krybed.todolist.data.db.AppDatabase
-import com.krybed.todolist.data.model.Task
+import com.krybed.todolist.data.model.TaskEntity
 import com.krybed.todolist.data.model.enums.FileType
 import com.krybed.todolist.data.model.enums.Priority
+import com.krybed.todolist.domain.model.Task
+import com.krybed.todolist.domain.repository.TaskRepository
 import com.krybed.todolist.util.converter.Converters
 import com.krybed.todolist.util.file.json.TaskTypeJsonAdapter
 import com.krybed.todolist.util.file.xml.TaskXml
 import com.krybed.todolist.util.file.xml.TaskXmlWrapper
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.simpleframework.xml.Serializer
 import org.simpleframework.xml.core.Persister
 import java.io.BufferedReader
@@ -36,189 +42,169 @@ import java.io.OutputStream
 import java.lang.reflect.Type
 import java.nio.charset.StandardCharsets
 import java.util.concurrent.Executors
+import androidx.core.net.toUri
 
 object FileService {
 
-    private val executor = Executors.newSingleThreadExecutor()
+//    private val executor = Executors.newSingleThreadExecutor()
 
-    fun exportTasksToCsv(ctx: Context) {
-        writeToFile(ctx, FileType.CSV) { outputStream ->
-            try {
-                val db = AppDatabase.getInstance(ctx.applicationContext)
-                val allTasks = db.taskDao().getAllSync()
-                val csvBuilder = StringBuilder()
-                csvBuilder.append(
-                    ctx.getString(R.string.csv_header)
-                ).append("\n")
-
-                for (task in allTasks) {
-                    csvBuilder.append(task.id).append(";")
-                    csvBuilder.append(sanitize(task.title)).append(";")
-                    csvBuilder.append(
-                        Converters.fromLocalDateTimeToString(task.deadline)
-                    ).append(";")
-                    csvBuilder.append(task.priority).append(";")
-                    csvBuilder.append(task.isDone).append(";")
-                    csvBuilder.append(
-                        Converters.fromLocalDateTimeToString(task.createdAt)
-                    ).append("\n")
-                }
-                outputStream.write(
-                    csvBuilder.toString().toByteArray(StandardCharsets.UTF_8)
-                )
-            }
-            catch (e: Exception) {
-                showToast(
-                    ctx,
-                    ctx.getString(R.string.error_export_csv) + " " + e.message
-                )
-                Log.e("Error CSV export", Log.getStackTraceString(e))
-            }
-        }
-    }
-
-    fun importTasksFromCsv(
+    suspend fun exportTasksToCsv(
         ctx: Context,
-        fileUri: Uri
-    ) {
-        readFromFile(ctx, fileUri, FileType.CSV) { inputStream ->
-            try {
-                BufferedReader(InputStreamReader(inputStream, StandardCharsets.UTF_8)).use { reader ->
-                    var line: String?
-                    var isFirstLine = true
-                    val db = AppDatabase.getInstance(ctx.applicationContext)
+        taskRepository: TaskRepository
+    ) = withContext(Dispatchers.IO) {
+        val allTasks = taskRepository.getAll()
 
-                    while (reader.readLine().also {
-                        line = it
-                    } != null) {
-                        if (isFirstLine) {
-                            isFirstLine = false
-                            continue
-                        }
-                        val fields = line!!.split(";")
-//                        val fields = line?.split(";")
-                        if (fields.size < 6) {
-                            continue
-                        }
+        writeToFile(ctx, FileType.CSV) { outputStream ->
+            val csvBuilder = StringBuilder()
+            csvBuilder.append(
+                ctx.getString(R.string.csv_header)
+            ).append("\n")
 
-                        // TODO BUILDER
-                        val task = Task()
-                        task.title = fields[1]
-                        task.deadline = Converters.fromStringToLocalDateTime(fields[2])
-                        task.priority = Priority.valueOf(fields[3])
-                        task.isDone = fields[4].toBoolean()
-                        task.createdAt = Converters.fromStringToLocalDateTime(fields[5])
-                        db.taskDao().insert(task)
-                    }
-                }
+            for (task in allTasks) {
+                csvBuilder.append(task.id).append(";")
+                csvBuilder.append(sanitize(task.title)).append(";")
+                csvBuilder.append(
+                    Converters.fromLocalDateTimeToString(task.deadline)
+                ).append(";")
+                csvBuilder.append(task.priority).append(";")
+                csvBuilder.append(task.isDone).append(";")
+                csvBuilder.append(
+                    Converters.fromLocalDateTimeToString(task.createdAt)
+                ).append("\n")
             }
-            catch (e: Exception) {
-                showToast(
-                    ctx,
-                    ctx.getString(R.string.error_import_csv) + " " + e.message
-                )
-                Log.e("Error CSV import", Log.getStackTraceString(e))
-            }
+            outputStream.write(
+                csvBuilder.toString().toByteArray(StandardCharsets.UTF_8)
+            )
         }
     }
 
-    fun exportTasksToJson(ctx: Context) {
-        writeToFile(ctx, FileType.JSON) { outputStream ->
-            try {
-                val db = AppDatabase.getInstance(ctx.applicationContext)
-                val allTasks = db.taskDao().getAllSync()
+    suspend fun importTasksFromCsv(
+        ctx: Context,
+        fileUri: Uri,
+        taskRepository: TaskRepository
+    ) = withContext(Dispatchers.IO) {
+        val tasks = readFromFile(ctx, fileUri, FileType.CSV) { inputStream ->
+            val parsedTasks = mutableListOf<Task>()
 
+            BufferedReader(InputStreamReader(
+                inputStream, StandardCharsets.UTF_8
+            )).use { reader ->
+                var line: String?
+                var isFirstLine = true
+
+                while (reader.readLine().also { line = it } != null) {
+                    if (isFirstLine) {
+                        isFirstLine = false
+                        continue
+                    }
+                    val fields = line!!.split(";")
+                    if (fields.size < 6) {
+                        continue
+                    }
+
+                    parsedTasks.add(
+                        Task(
+                            id = fields[0].toIntOrNull() ?: 0,
+                            title = fields[1],
+                            deadline = Converters.fromStringToLocalDateTime(fields[2]),
+                            priority = Priority.valueOf(fields[3]),
+                            isDone = fields[4].toBoolean(),
+                            createdAt = Converters.fromStringToLocalDateTime(fields[5]),
+                            attachments = mutableListOf()
+                        )
+                    )
+                }
+            }
+            parsedTasks
+        } ?: return@withContext
+
+        taskRepository.insertAll(tasks)
+    }
+
+    suspend fun exportTasksToJson(
+        ctx: Context,
+        taskRepository: TaskRepository
+    ) = withContext(Dispatchers.IO) {
+        val allTasks = taskRepository.getAll()
+        val gson = GsonBuilder()
+            .registerTypeAdapter(Task::class.java, TaskTypeJsonAdapter())
+            .setPrettyPrinting()
+            .create()
+
+        writeToFile(ctx, FileType.JSON) { outputStream ->
+            outputStream.write(
+                gson.toJson(
+                    allTasks
+                ).toByteArray(StandardCharsets.UTF_8)
+            )
+        }
+    }
+
+    suspend fun importTasksFromJson(
+        ctx: Context,
+        fileUri: Uri,
+        taskRepository: TaskRepository
+    ) = withContext(Dispatchers.IO) {
+//        val gson = GsonBuilder()
+//            .registerTypeAdapter(Task::class.java, TaskTypeJsonAdapter())
+//            .create()
+
+        val tasks = readFromFile(ctx, fileUri, FileType.JSON) { inputStream ->
+            BufferedReader(InputStreamReader(
+                inputStream, StandardCharsets.UTF_8
+            )).use { reader ->
+                val taskListType: Type = object : TypeToken<List<Task>>(){}.type
+//                tasks.addAll(gson.fromJson(reader, taskListType))
                 val gson = GsonBuilder()
                     .registerTypeAdapter(Task::class.java, TaskTypeJsonAdapter())
-                    .setPrettyPrinting()
                     .create()
-                val json = gson.toJson(allTasks)
-                outputStream.write(json.toByteArray(StandardCharsets.UTF_8))
+                gson.fromJson<List<Task>>(reader, taskListType)
+
+//                    val db = AppDatabase.getInstance(ctx.applicationContext)
+//                    for (task in tasks) {
+//                        db.taskDao().insert(task)
+//                    }
             }
-            catch (e: Exception) {
-                showToast(
-                    ctx,
-                    ctx.getString(R.string.error_export_json) + " " + e.message
-                )
-                Log.e("Error JSON export", Log.getStackTraceString(e))
-            }
-        }
+        } ?: return@withContext
+
+        taskRepository.insertAll(tasks)
     }
 
-    fun importTasksFromJson(
+    suspend fun exportTasksToXml(
         ctx: Context,
-        fileUri: Uri
-    ) {
-        readFromFile(ctx, fileUri, FileType.JSON) { inputStream ->
-            try {
-                BufferedReader(InputStreamReader(inputStream, StandardCharsets.UTF_8)).use { reader ->
-                    val gson = GsonBuilder()
-                        .registerTypeAdapter(Task::class.java, TaskTypeJsonAdapter())
-                        .create()
+        taskRepository: TaskRepository
+    ) = withContext(Dispatchers.IO) {
+        val allTasks = taskRepository.getAll()
 
-                    val taskListType: Type = object : TypeToken<List<Task>>(){}.type
-                    val tasks: List<Task> = gson.fromJson(reader, taskListType)
-
-                    val db = AppDatabase.getInstance(ctx.applicationContext)
-                    for (task in tasks) {
-                        db.taskDao().insert(task)
-                    }
-                }
-            }
-            catch (e: Exception) {
-                showToast(
-                    ctx,
-                    ctx.getString(R.string.error_import_json) + " " + e.message
-                )
-                Log.e("Error JSON import", Log.getStackTraceString(e))
-            }
-        }
-    }
-
-    fun exportTasksToXml(ctx: Context) {
         writeToFile(ctx, FileType.XML) { outputStream ->
-            try {
-                val db = AppDatabase.getInstance(ctx.applicationContext)
-                val allTasks = db.taskDao().getAllSync()
+//            val db = AppDatabase.getInstance(ctx.applicationContext)
+//            val allTasks = db.taskDao().getAllSync()
 
-                val taskXmlList = allTasks.map { TaskXml(it) }
-                val wrapper = TaskXmlWrapper(taskXmlList)
-                val serializer: Serializer = Persister()
-                serializer.write(wrapper, outputStream)
-            }
-            catch (e: Exception) {
-                showToast(
-                    ctx,
-                    ctx.getString(R.string.error_export_xml) + " " + e.message
-                )
-                Log.e("Error XML export", Log.getStackTraceString(e))
-            }
+            val taskXmlList = allTasks.map { TaskXml(it) }
+            val wrapper = TaskXmlWrapper(taskXmlList.toMutableList())
+            val serializer: Serializer = Persister()
+            serializer.write(wrapper, outputStream)
         }
     }
 
-    fun importTasksFromXml(
+    suspend fun importTasksFromXml(
         ctx: Context,
-        fileUri: Uri
-    ) {
-        readFromFile(ctx, fileUri, FileType.XML) { inputStream ->
-            try {
-                val serializer: Serializer = Persister()
-                val wrapper = serializer.read(TaskXmlWrapper::class.java, inputStream)
-                val tasks = wrapper.taskXmlList.map { it.toTask() }
+        fileUri: Uri,
+        taskRepository: TaskRepository
+    ) = withContext(Dispatchers.IO) {
+        val tasks = readFromFile(ctx, fileUri, FileType.XML) { inputStream ->
+            val serializer: Serializer = Persister()
+            val wrapper = serializer.read(TaskXmlWrapper::class.java, inputStream)
+//            val tasks = wrapper.taskXmlList.map { it.toTask() }
+//
+//            val db = AppDatabase.getInstance(ctx.applicationContext)
+//            for (task in tasks) {
+//                db.taskDao().insert(task)
+//            }
+            wrapper.taskXmlList.map { it.toTask() }
+        } ?: return@withContext
 
-                val db = AppDatabase.getInstance(ctx.applicationContext)
-                for (task in tasks) {
-                    db.taskDao().insert(task)
-                }
-            }
-            catch (e: Exception) {
-                showToast(
-                    ctx,
-                    ctx.getString(R.string.error_import_xml) + " " + e.message
-                )
-                Log.e("Error XML import", Log.getStackTraceString(e))
-            }
-        }
+        taskRepository.insertAll(tasks)
     }
 
     fun copyFileToInternalStorage(
@@ -269,8 +255,6 @@ object FileService {
             Log.e("IOException: ", Log.getStackTraceString(e))
             null
         }
-
-
     }
 
     fun getFilenameFromUri(
@@ -332,13 +316,12 @@ object FileService {
             fileType.extension
         )
 
-
     fun deleteFileFromInternalStorage(
         ctx: Context,
         filePath: String
     ): Boolean {
         return try {
-            val fileUri = Uri.parse(filePath)
+            val fileUri = filePath.toUri()
             val localFilePath = fileUri.path ?: return false
 
             if (!localFilePath.contains("/files")) {
@@ -350,7 +333,12 @@ object FileService {
                 "/files/".length
             )
             val file = File(ctx.filesDir, filename)
-            if (file.exists()) file.delete() else false
+            if (file.exists()) {
+                file.delete()
+            }
+            else {
+                false
+            }
         }
         catch (e: Exception) {
             Log.e("Exception: ", Log.getStackTraceString(e))
@@ -380,7 +368,7 @@ object FileService {
             outputStream = ctx.contentResolver.openOutputStream(fileUri)
         }
         else {
-            // Older android
+            // Older androids
             val path = Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_DOWNLOADS
             ).absolutePath
@@ -409,7 +397,7 @@ object FileService {
         writer: (OutputStream) -> Unit
     ) {
         val filename = "task_export_${System.currentTimeMillis()}${fileType.extension}"
-        executor.execute {
+//        executor.execute {
             try {
                 openOutputStream(ctx, filename, fileType).use { outputStream ->
                     writer(outputStream)
@@ -426,21 +414,22 @@ object FileService {
                 )
                 Log.e("Error export ${fileType.name}", Log.getStackTraceString(e))
             }
-        }
+//        }
     }
 
-    private fun readFromFile(
+    private suspend fun<T> readFromFile(
         ctx: Context,
         fileUri: Uri,
         fileType: FileType,
-        reader: (InputStream) -> Unit
-    ) {
-        executor.execute {
-            try {
-                openInputStream(ctx, fileUri, fileType).use { inputStream ->
+        reader: (InputStream) -> T
+    ): T? {
+//        executor.execute {
+            return try {
+                val result = openInputStream(ctx, fileUri, fileType).use { inputStream ->
                     reader(inputStream)
-                    showToast(ctx, "Import ${fileType.name}")
                 }
+                showToast(ctx, "Import ${fileType.name}")
+                result
             }
             catch (e: Exception) {
                 showToast(
@@ -448,7 +437,8 @@ object FileService {
                     ctx.getString(R.string.import_error) + " " + e.message
                 )
                 Log.e("Error import", Log.getStackTraceString(e))
-            }
+                null
+//            }
         }
     }
 

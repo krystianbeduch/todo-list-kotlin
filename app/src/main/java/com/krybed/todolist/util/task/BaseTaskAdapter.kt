@@ -8,8 +8,9 @@ import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.krybed.todolist.R
-import com.krybed.todolist.data.model.Task
+import com.krybed.todolist.data.model.TaskEntity
 import com.krybed.todolist.data.model.enums.Priority
+import com.krybed.todolist.domain.model.Task
 import com.krybed.todolist.util.converter.Converters
 
 abstract class BaseTaskAdapter<VH : RecyclerView.ViewHolder>(

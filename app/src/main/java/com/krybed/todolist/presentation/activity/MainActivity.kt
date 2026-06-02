@@ -14,7 +14,10 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.findNavController
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
@@ -24,6 +27,7 @@ import com.krybed.todolist.databinding.ActivityMainBinding
 import com.krybed.todolist.presentation.viewmodel.TaskViewModel
 import com.krybed.todolist.util.file.FileService
 import com.krybed.todolist.util.lang.LocalHelper
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
@@ -81,14 +85,29 @@ class MainActivity : AppCompatActivity() {
         NavigationUI.setupWithNavController(navView, navController)
 
         taskViewModel = ViewModelProvider(this)[TaskViewModel::class.java]
-        taskViewModel.tasksForNotification.observe(this) { tasks ->
-            val badge = navView.getOrCreateBadge(R.id.navigation_notifications)
-            if (tasks.isNotEmpty()) {
-                badge.isVisible = true
-                badge.number = tasks.size
-            }
-            else {
-                badge.isVisible = false
+
+//        taskViewModel.tasksForNotification.observe(this) { tasks ->
+//            val badge = navView.getOrCreateBadge(R.id.navigation_notifications)
+//            if (tasks.isNotEmpty()) {
+//                badge.isVisible = true
+//                badge.number = tasks.size
+//            }
+//            else {
+//                badge.isVisible = false
+//            }
+//        }
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                taskViewModel.tasksForNotification.collect { tasks ->
+                    val badge = navView.getOrCreateBadge(R.id.navigation_notifications)
+                    if (tasks.isNotEmpty()) {
+                        badge.isVisible = true
+                        badge.number = tasks.size
+                    }
+                    else {
+                        badge.isVisible = false
+                    }
+                }
             }
         }
 
@@ -188,7 +207,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
 
     override fun onDestroy() {
         super.onDestroy()

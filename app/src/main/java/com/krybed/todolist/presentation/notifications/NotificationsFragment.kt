@@ -5,10 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.krybed.todolist.databinding.FragmentNotificationsBinding
 import com.krybed.todolist.presentation.viewmodel.TaskViewModel
+import kotlinx.coroutines.launch
 
 class NotificationsFragment : Fragment() {
 
@@ -33,10 +37,19 @@ class NotificationsFragment : Fragment() {
 
         val taskViewModel: TaskViewModel =
             ViewModelProvider(requireActivity())[TaskViewModel::class.java]
-        taskViewModel.tasksForNotification.observe(viewLifecycleOwner) { tasks ->
-            notificationAdapter.updateTasks(tasks)
-//            notificationAdapter.setTasks(tasks
+
+        lifecycleScope.launch {
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                taskViewModel.tasksForNotification.collect { tasks ->
+                    notificationAdapter.updateTasks(tasks)
+                }
+            }
         }
+
+//        taskViewModel.tasksForNotification.observe(viewLifecycleOwner) { tasks ->
+//            notificationAdapter.updateTasks(tasks)
+//            notificationAdapter.setTasks(tasks
+//        }
         return b.root
     }
 

@@ -10,9 +10,9 @@ import org.simpleframework.xml.Root
 class TaskXmlWrapper() {
 
     @field:ElementList(name = "Tasks", entry = "Task", inline = true, required = false)
-    var taskXmlList: List<TaskXml> = emptyList()
+    var taskXmlList: MutableList<TaskXml> = mutableListOf()
 
-    constructor(taskXmlList: List<TaskXml>) : this() {
+    constructor(taskXmlList: MutableList<TaskXml>) : this() {
         this.taskXmlList = taskXmlList
     }
 }

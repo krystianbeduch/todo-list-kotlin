@@ -42,7 +42,6 @@ android {
         targetCompatibility = JavaVersion.VERSION_21
     }
     buildFeatures {
-//        compose = true
         viewBinding = true
     }
 

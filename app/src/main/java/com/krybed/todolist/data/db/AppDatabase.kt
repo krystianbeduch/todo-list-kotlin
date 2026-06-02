@@ -8,13 +8,13 @@ import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.krybed.todolist.data.dao.AttachmentDao
 import com.krybed.todolist.data.dao.TaskDao
-import com.krybed.todolist.data.model.Task
-import com.krybed.todolist.data.model.Attachment
+import com.krybed.todolist.data.model.TaskEntity
+import com.krybed.todolist.data.model.AttachmentEntity
 import com.krybed.todolist.util.converter.Converters
 
 @Database(
-    entities = [Task::class, Attachment::class],
-    version = 1,
+    entities = [TaskEntity::class, AttachmentEntity::class],
+    version = 2,
     exportSchema = true
 )
 @TypeConverters(Converters::class)

@@ -8,7 +8,8 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.krybed.todolist.R
-import com.krybed.todolist.data.model.Task
+import com.krybed.todolist.data.model.TaskEntity
+import com.krybed.todolist.domain.model.Task
 import com.krybed.todolist.util.converter.Converters
 import com.krybed.todolist.util.task.BaseTaskAdapter
 

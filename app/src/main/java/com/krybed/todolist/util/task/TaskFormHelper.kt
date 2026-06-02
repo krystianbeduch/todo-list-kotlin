@@ -13,8 +13,9 @@ import android.widget.Toast
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import com.krybed.todolist.R
-import com.krybed.todolist.data.model.Task
+import com.krybed.todolist.data.model.TaskEntity
 import com.krybed.todolist.data.model.enums.Priority
+import com.krybed.todolist.domain.model.Task
 import com.krybed.todolist.presentation.viewmodel.TaskViewModel
 import com.krybed.todolist.util.converter.Converters
 import java.time.LocalDateTime
@@ -81,9 +82,14 @@ class TaskFormHelper (
         }
 
         if (isEditMode && existingTask != null) {
-            existingTask.title = title
-            existingTask.deadline = deadline
-            existingTask.priority = selectedPriority
+            val updatedTask = existingTask.copy(
+                title = title,
+                deadline = deadline,
+                priority = selectedPriority
+            )
+//            existingTask.title = title
+//            existingTask.deadline = deadline
+//            existingTask.priority = selectedPriority
 
             taskViewModel.update(existingTask)
 
@@ -117,7 +123,9 @@ class TaskFormHelper (
     }
 
     private fun setupDeadlinePicker() =
-        deadlineEditText.setOnClickListener { showDateTimePicker() }
+        deadlineEditText.setOnClickListener {
+            showDateTimePicker()
+        }
 
     private fun setupPrioritySpinner() {
         val adapter = object : ArrayAdapter<Priority>(

@@ -3,10 +3,13 @@ package com.krybed.todolist.util.file.json
 import com.google.gson.TypeAdapter
 import com.google.gson.stream.JsonReader
 import com.google.gson.stream.JsonWriter
-import com.krybed.todolist.data.model.Task
+import com.krybed.todolist.data.model.TaskEntity
 import com.krybed.todolist.data.model.enums.Priority
+import com.krybed.todolist.domain.model.Task
 import com.krybed.todolist.util.converter.Converters
+import com.krybed.todolist.util.lang.LocalHelper
 import java.io.IOException
+import java.time.LocalDateTime
 
 class TaskTypeJsonAdapter : TypeAdapter<Task>() {
 
@@ -32,23 +35,40 @@ class TaskTypeJsonAdapter : TypeAdapter<Task>() {
 
     @Throws(IOException::class)
     override fun read(input: JsonReader): Task {
-        val task = Task()
+//        var id = 0
+        var title = ""
+        var deadline = LocalDateTime.now().plusHours(24)
+        var priority = Priority.HIGH
+        var isDone = false
+        var createdAtString: String? = null
+
         input.beginObject()
         while (input.hasNext()) {
             when (input.nextName()) {
-                Task.FIELD_TITLE -> task.title = input.nextString()
-                Task.FIELD_DEADLINE -> task.deadline = Converters.fromStringToLocalDateTime(
+//                Task.FIELD_ID -> id = input.nextInt()
+                Task.FIELD_TITLE -> title = input.nextString()
+                Task.FIELD_DEADLINE -> deadline = Converters.fromStringToLocalDateTime(
                     input.nextString()
                 )
-                Task.FIELD_PRIORITY -> task.priority = Priority.valueOf(input.nextString())
-                Task.FIELD_IS_DONE -> task.isDone =  input.nextBoolean()
-                Task.FIELD_CREATED_AT -> task.createdAt = Converters.fromStringToLocalDateTime(
-                    input.nextString()
-                )
+                Task.FIELD_PRIORITY -> priority = Priority.valueOf(input.nextString())
+                Task.FIELD_IS_DONE -> isDone =  input.nextBoolean()
+                Task.FIELD_CREATED_AT -> createdAtString = input.nextString()
                 else -> input.skipValue()
             }
         }
         input.endObject()
-        return task
+
+        val createdAt = createdAtString?.let {
+            Converters.fromStringToLocalDateTime(it)
+        } ?: LocalDateTime.now()
+
+        return Task(
+//            id = id,
+            title = title,
+            deadline = deadline,
+            isDone = isDone,
+            priority = priority,
+            createdAt = createdAt
+        )
     }
 }

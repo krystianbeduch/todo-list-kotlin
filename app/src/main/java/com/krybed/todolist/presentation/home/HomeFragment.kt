@@ -18,27 +18,36 @@ import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.core.net.toUri
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.krybed.todolist.R
-import com.krybed.todolist.data.model.Task
-import com.krybed.todolist.data.model.Attachment
+import com.krybed.todolist.data.db.AppDatabase
+import com.krybed.todolist.data.mapper.AttachmentMapper
+import com.krybed.todolist.data.mapper.TaskMapper
 import com.krybed.todolist.data.model.enums.NotificationType
 import com.krybed.todolist.data.model.enums.Priority
 import com.krybed.todolist.data.model.enums.SortType
+import com.krybed.todolist.data.repository.AttachmentRepositoryImpl
+import com.krybed.todolist.data.repository.TaskRepositoryImpl
 import com.krybed.todolist.databinding.FragmentHomeBinding
+import com.krybed.todolist.domain.model.Attachment
+import com.krybed.todolist.domain.model.Task
 import com.krybed.todolist.presentation.activity.TaskActivity
 import com.krybed.todolist.presentation.viewmodel.TaskViewModel
+import com.krybed.todolist.presentation.viewmodel.TaskViewModelFactory
 import com.krybed.todolist.util.file.FileService
 import com.krybed.todolist.util.lang.LocalHelper
 import com.krybed.todolist.util.notification.NotificationUtils
+import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import java.time.LocalTime
 import java.util.Locale
@@ -74,8 +83,8 @@ class HomeFragment : Fragment() {
                         filePath = localUri.toString()
                     )
 
-                    task.attachments.add(attachment)
-                    taskAdapter.notifyTaskChanged(task.id)
+//                    task.attachments.add(attachment)
+//                    taskAdapter.notifyTaskChanged(task.id)
                     taskViewModel.addAttachmentToTask(attachment)
 
                     Log.i("Attachment", "Selected file: $localUri")
@@ -94,21 +103,47 @@ class HomeFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentHomeBinding.inflate(inflater, container, false)
-        taskViewModel = ViewModelProvider(requireActivity())[TaskViewModel::class.java]
+        binding = FragmentHomeBinding.inflate(
+            inflater,
+            container,
+            false
+        )
+
+        val ctx = requireContext().applicationContext
+        val database = AppDatabase.getInstance(ctx)
+        val attachmentMapper = AttachmentMapper()
+
+        val taskRepository = TaskRepositoryImpl(
+            database.taskDao(),
+            TaskMapper(),
+            attachmentMapper
+        )
+
+        val attachmentRepository = AttachmentRepositoryImpl(
+            database.attachmentDao(),
+            attachmentMapper
+        )
+
+        val factory = TaskViewModelFactory(taskRepository, attachmentRepository)
+
+        taskViewModel = ViewModelProvider(
+            requireActivity(),
+            factory
+        )[TaskViewModel::class.java]
+
         NotificationUtils.createNotificationChannel(requireContext())
         initRecyclerView()
 
-        taskViewModel.tasks.observe(viewLifecycleOwner) { tasks ->
-            val safeTasks = tasks ?: emptyList()
-            taskAdapter.updateTasks(safeTasks)
-
-            val checked = taskViewModel.notificationChecked.value ?: false
-            checkForUpcomingDeadlines(safeTasks, checked)
-
-            if (!checked) {
-                taskViewModel.markNotificationChecked()
-            }
+//        taskViewModel.tasks.observe(viewLifecycleOwner) { tasks ->
+//            val safeTasks = tasks ?: emptyList()
+//            taskAdapter.updateTasks(safeTasks)
+//
+//            val checked = taskViewModel.notificationChecked.value ?: false
+//            checkForUpcomingDeadlines(safeTasks, checked)
+//
+//            if (!checked) {
+//                taskViewModel.markNotificationChecked()
+//            }
 
 //            taskViewModel.hasInsertedDummy.observe(viewLifecycleOwner) { hasInserted ->
 //                if ((hasInserted == null || !hasInserted) && safeTasks.isEmpty()) {
@@ -125,24 +160,25 @@ class HomeFragment : Fragment() {
 //                    }
 //                }
 //            }
-        }
-        taskViewModel.hasInsertedDummy.observe(viewLifecycleOwner) { hasInserted ->
-            val safeTasks = taskViewModel.tasks.value ?: emptyList()
-            if ((hasInserted == null || !hasInserted) && safeTasks.isEmpty()) {
-                insertDummyTasks()
-                taskViewModel.markDummyInserted()
-            }
-        }
+//        }
 
-        taskViewModel.notificationChecked.observe(viewLifecycleOwner) { checked ->
-            val safeTasks = taskViewModel.tasks.value ?: emptyList()
-            if (checked != null) {
-                checkForUpcomingDeadlines(safeTasks, checked)
-                if (!checked) {
-                    taskViewModel.markNotificationChecked()
-                }
-            }
-        }
+//        taskViewModel.hasInsertedDummy.observe(viewLifecycleOwner) { hasInserted ->
+//            val safeTasks = taskViewModel.tasks.value ?: emptyList()
+//            if ((hasInserted == null || !hasInserted) && safeTasks.isEmpty()) {
+//                insertDummyTasks()
+//                taskViewModel.markDummyInserted()
+//            }
+//        }
+
+//        taskViewModel.notificationChecked.observe(viewLifecycleOwner) { checked ->
+//            val safeTasks = taskViewModel.tasks.value ?: emptyList()
+//            if (checked != null) {
+//                checkForUpcomingDeadlines(safeTasks, checked)
+//                if (!checked) {
+//                    taskViewModel.markNotificationChecked()
+//                }
+//            }
+//        }
         return b.root
     }
 
@@ -164,8 +200,55 @@ class HomeFragment : Fragment() {
         }
         ViewCompat.requestApplyInsets(b.tasksRecyclerView)
 
+        observeViewModel()
+        setupMenu()
+    }
+
+    private fun observeViewModel() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+
+                launch {
+                    taskViewModel.tasks.collect { tasks ->
+                        taskAdapter.updateTasks(tasks)
+
+                        val checked = taskViewModel.notificationChecked.value
+                        checkForUpcomingDeadlines(tasks, checked)
+
+                        if (!checked) {
+                            taskViewModel.markNotificationChecked()
+                        }
+                    }
+                }
+
+                launch {
+                    taskViewModel.hasInsertedDummy.collect { hasInserted ->
+                        val safeTasks = taskViewModel.tasks.value
+                        if (!hasInserted && safeTasks.isEmpty()) {
+                            insertDummyTasks()
+                            taskViewModel.markDummyInserted()
+                        }
+                    }
+                }
+
+                launch {
+                    taskViewModel.notificationChecked.collect { checked ->
+                        val safeTasks = taskViewModel.tasks.value
+                        checkForUpcomingDeadlines(safeTasks, checked)
+
+                        if (!checked) {
+                            taskViewModel.markNotificationChecked()
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private fun setupMenu() {
         val menuHost: MenuHost = requireActivity()
         menuHost.addMenuProvider(object : MenuProvider {
+
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 menuInflater.inflate(R.menu.sort_menu, menu)
 
@@ -184,6 +267,7 @@ class HomeFragment : Fragment() {
                     adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
                     it.adapter = adapter
                     it.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+
                         override fun onItemSelected(
                             parent: AdapterView<*>?,
                             view: View?,
@@ -195,10 +279,11 @@ class HomeFragment : Fragment() {
                                 requireContext(),
                                 selectedName
                             )
-                            val currentTasks = taskViewModel.tasks.value
-                            if (currentTasks != null) {
-                                taskViewModel.sortTasks(currentTasks.toMutableList(), selected)
-                            }
+                            taskViewModel.loadTasksBySort(selected)
+//                            val currentTasks = taskViewModel.tasks.value
+//                            if (currentTasks != null) {
+//                                taskViewModel.sortTasks(currentTasks.toMutableList(), selected)
+//                            }
                         }
 
                         override fun onNothingSelected(parent: AdapterView<*>?) = Unit
@@ -232,6 +317,7 @@ class HomeFragment : Fragment() {
 //        b.tasksRecyclerView.layoutManager = LinearLayoutManager(context)
         b.tasksRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         taskAdapter = TaskAdapter(emptyList(), object : TaskAdapter.OnTaskClickListener {
+
             override fun onEditClick(task: Task) {
                 Log.i("Task", "Edit: ${task.id}. ${task.title}")
                 startActivity(
@@ -429,10 +515,10 @@ class HomeFragment : Fragment() {
         if (FileService.deleteFileFromInternalStorage(
                 requireContext(), attachment.filePath
         )) {
-            task.attachments.removeAll {
-                it.filePath == attachment.filePath && it.filename == attachment.filename
-            }
-            taskAdapter.notifyTaskChanged(task.id)
+//            task.attachments.removeAll {
+//                it.filePath == attachment.filePath && it.filename == attachment.filename
+//            }
+//            taskAdapter.notifyTaskChanged(task.id)
             taskViewModel.deleteAttachment(attachment)
 
             Toast.makeText(
@@ -460,22 +546,38 @@ class HomeFragment : Fragment() {
 
         for (task in tasks) {
             if (!task.isDone) {
-                if (task.deadline.isBefore(now)) {
-                    task.notificationType = NotificationType.OVERDUE
-                    tasksToNotify.add(task)
+                val notificationType = when {
+                    task.deadline.isBefore(now) -> NotificationType.OVERDUE
+                    task.deadline.isAfter(now) && task.deadline.isBefore(threshold) ->
+                        NotificationType.UPCOMING
+                    else -> null
+                }
+                if (notificationType != null) {
+                    tasksToNotify.add(task.copy(notificationType = notificationType))
                     if (!isNotificationShown) {
-                        NotificationUtils.showTaskNotification(requireContext(), task)
+                        NotificationUtils.showTaskNotification(
+                            requireContext(),
+                            task.copy(notificationType = notificationType)
+                        )
                     }
                 }
-                else if (task.deadline.isAfter(now) &&
-                    task.deadline.isBefore(threshold)
-                ) {
-                    task.notificationType = NotificationType.UPCOMING
-                    tasksToNotify.add(task)
-                    if (!isNotificationShown) {
-                        NotificationUtils.showTaskNotification(requireContext(), task)
-                    }
-                }
+
+//                if (task.deadline.isBefore(now)) {
+//                    task.notificationType = NotificationType.OVERDUE
+//                    tasksToNotify.add(task)
+//                    if (!isNotificationShown) {
+//                        NotificationUtils.showTaskNotification(requireContext(), task)
+//                    }
+//                }
+//                else if (task.deadline.isAfter(now) &&
+//                    task.deadline.isBefore(threshold)
+//                ) {
+//                    task.notificationType = NotificationType.UPCOMING
+//                    tasksToNotify.add(task)
+//                    if (!isNotificationShown) {
+//                        NotificationUtils.showTaskNotification(requireContext(), task)
+//                    }
+//                }
             }
         }
         taskViewModel.updateTasksForNotification(tasksToNotify)

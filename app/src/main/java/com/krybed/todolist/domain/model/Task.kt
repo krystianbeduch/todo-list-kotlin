@@ -1,37 +1,19 @@
-package com.krybed.todolist.data.model
+package com.krybed.todolist.domain.model
 
-import androidx.room.ColumnInfo
-import androidx.room.Entity
-import androidx.room.Ignore
-import androidx.room.PrimaryKey
 import com.krybed.todolist.data.model.enums.NotificationType
 import com.krybed.todolist.data.model.enums.Priority
 import java.time.LocalDateTime
 
-@Entity
-data class Task (
-    @PrimaryKey(autoGenerate = true)
-    var id: Int = 0,
-
-    var title: String = "",
-
-    var deadline: LocalDateTime = LocalDateTime.now().plusHours(24),
-
-    @ColumnInfo(name = "is_done")
-    var isDone: Boolean = false,
-
-    @ColumnInfo(name = "priority")
-    var priority: Priority = Priority.HIGH,
-
-    @ColumnInfo(name = "created_at")
-    var createdAt: LocalDateTime = LocalDateTime.now()
+data class Task(
+    val id: Int = 0,
+    val title: String = "",
+    val deadline: LocalDateTime = LocalDateTime.now().plusHours(24),
+    val isDone: Boolean = false,
+    val priority: Priority = Priority.HIGH,
+    val createdAt: LocalDateTime = LocalDateTime.now(),
+    val attachments: List<Attachment> = emptyList(),
+    val notificationType: NotificationType = NotificationType.NONE
 ) {
-    @Ignore
-    var attachments: MutableList<Attachment> = mutableListOf()
-
-    @Ignore
-    var notificationType: NotificationType = NotificationType.NONE
-
     companion object {
         const val FIELD_ID = "id"
         const val FIELD_TITLE = "title"

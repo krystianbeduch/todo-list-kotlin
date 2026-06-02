@@ -5,20 +5,29 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.krybed.todolist.data.model.Attachment
+import com.krybed.todolist.data.model.AttachmentEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface AttachmentDao {
 
-    @Query("SELECT * FROM Attachment")
-    fun getAllAttachments(): List<Attachment>
+//    @Query("SELECT * FROM AttachmentEntity")
+//    fun getAllAttachments(): List<AttachmentEntity>
+//    fun getAllAttachments(): Flow<List<AttachmentEntity>>
+    // ?
 
-    @Query("SELECT * FROM Attachment WHERE task_id = :taskId")
-    fun getAttachmentsForTask(taskId: Int): List<Attachment>
+    @Query("SELECT * FROM AttachmentEntity WHERE task_id = :taskId")
+//    fun getAttachmentsForTask(taskId: Int): List<AttachmentEntity>
+    fun getByTaskId(taskId: Int): Flow<List<AttachmentEntity>>
 
-    @Insert(onConflict = OnConflictStrategy.Companion.REPLACE)
-    fun insert(attachment: Attachment)
+    @Query("SELECT * FROM AttachmentEntity WHERE task_id = :taskId")
+    suspend fun getByTaskIdOnce(taskId: Int): List<AttachmentEntity>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+//    fun insert(attachment: AttachmentEntity)
+    suspend fun insert(attachment: AttachmentEntity)
 
     @Delete
-    fun delete(attachment: Attachment)
+//    fun delete(attachment: AttachmentEntity)
+    suspend fun delete(attachment: AttachmentEntity)
 }

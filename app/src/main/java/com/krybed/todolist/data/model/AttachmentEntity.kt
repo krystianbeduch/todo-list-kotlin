@@ -9,15 +9,15 @@ import androidx.room.PrimaryKey
 @Entity(
     foreignKeys = [
         ForeignKey(
-            entity = Task::class,
+            entity = TaskEntity::class,
             parentColumns = ["id"],      // PK Task
             childColumns = ["task_id"],  // FK Attachment
-            onDelete = ForeignKey.Companion.CASCADE
+            onDelete = ForeignKey.CASCADE
         )
     ],
     indices = [Index("task_id")]
 )
-data class Attachment (
+data class AttachmentEntity (
 
     @PrimaryKey(autoGenerate = true)
     var id: Int = 0,

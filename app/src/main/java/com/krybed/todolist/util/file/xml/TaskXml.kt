@@ -1,7 +1,7 @@
 package com.krybed.todolist.util.file.xml
 
-import com.krybed.todolist.data.model.Task
 import com.krybed.todolist.data.model.enums.Priority
+import com.krybed.todolist.domain.model.Task
 import com.krybed.todolist.util.converter.Converters
 import org.simpleframework.xml.Default
 import org.simpleframework.xml.Element
@@ -39,12 +39,13 @@ class TaskXml() {
     }
 
     fun toTask(): Task {
-        return Task().apply {
-            title = this@TaskXml.title
-            deadline = Converters.fromStringToLocalDateTime(this@TaskXml.deadline)
-            priority = this@TaskXml.priority
-            isDone = this@TaskXml.isDone
-            createdAt = Converters.fromStringToLocalDateTime(this@TaskXml.createdAt)
-        }
+        return Task(
+            id = id,
+            title = title,
+            deadline = Converters.fromStringToLocalDateTime(deadline),
+            priority = priority,
+            isDone = isDone,
+            createdAt = Converters.fromStringToLocalDateTime(createdAt)
+        )
     }
 }
