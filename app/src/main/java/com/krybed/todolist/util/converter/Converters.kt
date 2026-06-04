@@ -11,16 +11,16 @@ import java.util.Locale
 
 object Converters {
 
-    private val formatter: DateTimeFormatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME
-    private val formFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")
+    private val isoFormatter: DateTimeFormatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME
+    private val uiFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")
 
     @TypeConverter
     fun fromStringToLocalDateTimeISO(value: String?): LocalDateTime? =
-        value?.let { LocalDateTime.parse(it, formatter) }
+        value?.let { LocalDateTime.parse(it, isoFormatter) }
 
     @TypeConverter
     fun fromLocalDateTimeISOToString(dateTime: LocalDateTime?): String? =
-        dateTime?.format(formatter)
+        dateTime?.format(isoFormatter)
 
     @TypeConverter
     fun priorityToInt(priority: Priority?): Int? =
@@ -41,15 +41,15 @@ object Converters {
         if (dateTimeText.isNullOrEmpty()) {
             throw DateTimeParseException("Empty date text", dateTimeText ?: "", 0)
         }
-        return LocalDateTime.parse(dateTimeText, formFormatter)
+        return LocalDateTime.parse(dateTimeText, uiFormatter)
     }
 
     fun fromLocalDateTimeToString(dateTime: LocalDateTime?): String? =
-        dateTime?.format(formFormatter)
+        dateTime?.format(uiFormatter)
 
     private fun getFormatterWithDayName(ctx: Context): DateTimeFormatter {
         val languageCode: String = LocalHelper.getSavedLanguage(ctx)
-        val locale = Locale(languageCode)
+        val locale = Locale.forLanguageTag(languageCode)
         return DateTimeFormatter.ofPattern("EEEE, dd.MM.yyyy HH:mm", locale)
     }
 }

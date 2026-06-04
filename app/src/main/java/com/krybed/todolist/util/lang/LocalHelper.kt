@@ -5,9 +5,9 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.content.res.Configuration
 import androidx.appcompat.app.AlertDialog
-import java.util.Locale
 import androidx.core.content.edit
 import com.krybed.todolist.R
+import java.util.Locale
 
 object LocalHelper {
 
@@ -40,12 +40,10 @@ object LocalHelper {
         AlertDialog.Builder(ctx)
             .setTitle(ctx.getString(R.string.select_lang))
             .setItems(arrayOf("Polski", "English")) { _, which ->
-                val selectedLanguage = if (which == 0) "pl" else "en"
+                val selectedLanguage = if (which == 0) "pl-PL" else "en-GB"
                 changeLanguage(ctx, selectedLanguage)
             }
-            .setNegativeButton(ctx.getString(R.string.cancel)) { dialog, _ ->
-                dialog.dismiss()
-            }
+            .setNegativeButton(ctx.getString(R.string.cancel), null)
             .show()
     }
 

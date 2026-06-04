@@ -1,85 +1,45 @@
 package com.krybed.todolist.data.repository
 
-import com.krybed.todolist.data.dao.AttachmentDao
 import com.krybed.todolist.data.dao.TaskDao
-import com.krybed.todolist.data.mapper.AttachmentMapper
-import com.krybed.todolist.data.mapper.TaskMapper
-import com.krybed.todolist.data.model.TaskEntity
-import com.krybed.todolist.data.model.TaskWithAttachments
+import com.krybed.todolist.data.mapper.TaskMapper.toDomain
+import com.krybed.todolist.data.mapper.TaskMapper.toEntity
 import com.krybed.todolist.domain.model.Task
 import com.krybed.todolist.domain.repository.TaskRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
 class TaskRepositoryImpl(
-//    ctx: Context
-    private val taskDao: TaskDao,
-    private val taskMapper: TaskMapper,
-    private val attachmentMapper: AttachmentMapper
+    private val taskDao: TaskDao
 ) : TaskRepository {
 
-//    private val taskDao = AppDatabase.getInstance(ctx).taskDao()
-//    private val taskMapper: TaskMapper = Mappers.getMapper(TaskMapper::class.java)
-
     override fun getSortedTasks(): Flow<List<Task>> =
-        taskDao.getTasksOrderDescByCreatedDate()
-            .map { relations ->
-                relations.map { it.toDomain() }
-            }
-
-//    fun getSortedTasks(): LiveData<List<TaskEntity>> =
-//        taskDao.getTasksOrderDescByCreatedDate()
+        taskDao.getTasksOrderDescByCreatedDate().map { list ->
+                list.map { it.toDomain() }
+        }
 
     override fun getById(id: Int): Flow<Task?> =
-        taskDao.getById(id)
-            .map { relation ->
-                relation?.toDomain()
-            }
-
-//    fun getById(id: Int): LiveData<TaskEntity?> =
-//        taskDao.getById(id)
+        taskDao.getById(id).map { it?.toDomain() }
 
     override suspend fun insert(task: Task) =
-        taskDao.insert(taskMapper.toEntity(task))
-
-//    fun insert(task: TaskEntity) =
-//        taskDao.insert(task)
+        taskDao.insert(task.toEntity())
 
     override suspend fun update(task: Task) =
-        taskDao.update(taskMapper.toEntity(task))
-
-//    fun update(task: TaskEntity) =
-//        taskDao.update(task)
+        taskDao.update(task.toEntity())
 
     override suspend fun delete(task: Task) =
-        taskDao.delete(taskMapper.toEntity(task))
-
-//    fun delete(task: TaskEntity) =
-//        taskDao.delete(task)
+        taskDao.delete(task.toEntity())
 
     override suspend fun deleteAll() =
         taskDao.deleteAll()
 
-//    fun deleteAll() =
-//        taskDao.deleteAll()
-
     override suspend fun changeStatus(taskId: Int, isDone: Boolean) =
         taskDao.changeStatus(taskId, isDone)
 
-    override suspend fun getAll(): List<Task> =
-        taskDao.getAll().map { relation ->
+    override suspend fun getAllOnce(): List<Task> =
+        taskDao.getAllOnce().map { relation ->
             relation.toDomain()
         }
 
-
     override suspend fun insertAll(tasks: List<Task>) =
-        taskDao.insertAll(tasks.map(taskMapper::toEntity))
-
-//    fun changeStatus(taskId: Int, isDone: Boolean) =
-//        taskDao.changeStatus(taskId, isDone)
-
-    private fun TaskWithAttachments.toDomain(): Task =
-        taskMapper.toDomain(task).copy(
-            attachments = attachments.map(attachmentMapper::toDomain)
-        )
+        taskDao.insertAll(tasks.map( { it.toEntity() }))
 }

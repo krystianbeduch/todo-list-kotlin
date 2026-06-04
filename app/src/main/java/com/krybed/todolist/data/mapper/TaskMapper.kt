@@ -1,31 +1,36 @@
 package com.krybed.todolist.data.mapper
 
+import com.krybed.todolist.data.mapper.AttachmentMapper.toDomain
 import com.krybed.todolist.data.model.TaskEntity
+import com.krybed.todolist.data.model.TaskWithAttachments
 import com.krybed.todolist.data.model.enums.NotificationType
 import com.krybed.todolist.domain.model.Task
 
-class TaskMapper {
-    fun toDomain(entity: TaskEntity): Task {
-        return Task(
-            id = entity.id,
-            title = entity.title,
-            deadline = entity.deadline,
-            isDone = entity.isDone,
-            priority = entity.priority,
-            createdAt = entity.createdAt,
+object TaskMapper {
+    fun TaskEntity.toDomain(): Task =
+        Task(
+            id = id,
+            title = title,
+            deadline = deadline,
+            isDone = isDone,
+            priority = priority,
+            createdAt = createdAt,
             attachments = emptyList(),
             notificationType = NotificationType.NONE
         )
-    }
 
-    fun toEntity(domain: Task): TaskEntity {
-        return TaskEntity(
-            id = domain.id,
-            title = domain.title,
-            deadline = domain.deadline,
-            isDone = domain.isDone,
-            priority = domain.priority,
-            createdAt = domain.createdAt
+    fun Task.toEntity(): TaskEntity =
+        TaskEntity(
+            id = id,
+            title = title,
+            deadline = deadline,
+            isDone = isDone,
+            priority = priority,
+            createdAt = createdAt
         )
-    }
+
+    fun TaskWithAttachments.toDomain(): Task =
+        task.toDomain().copy(
+            attachments = attachments.map { it.toDomain() }
+        )
 }

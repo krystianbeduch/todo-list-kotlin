@@ -21,7 +21,7 @@ import kotlinx.coroutines.flow.Flow
 //}
 
 interface AttachmentRepository {
-    suspend fun getByTaskId(taskId: Int): Flow<List<Attachment>>
+    fun getByTaskId(taskId: Int): Flow<List<Attachment>>
     suspend fun insert(attachment: Attachment)
     suspend fun delete(attachment: Attachment)
 }

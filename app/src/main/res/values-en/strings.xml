@@ -32,7 +32,7 @@
     <!-- MainActivity -->
     <string name="incorrect_file_format">Incorrect file format</string>
     <string name="select_file_format">Select file format:</string>
-    <string name="select_file">Select file </string>
+    <string name="select_file">Select file %1$s</string>
     <string name="select_lang">Select language:</string>
     <string name="delete_all_title">Delete all tasks</string>
     <string name="delete_all_message">Are you sure you want to delete all tasks?</string>
@@ -59,7 +59,7 @@
     <string name="sort_status">Status</string>
 
     <!-- TaskAdapter -->
-    <string name="deadline_prefix">Deadline:</string>
+    <string name="deadline_prefix">Deadline: %1$s</string>
 
     <!-- HomeFragment -->
     <string name="confirm_delete_title">Confirmation of deletion</string>
@@ -77,8 +77,8 @@
     <string name="error_deleting_attachment">Error deleting attachment</string>
 
     <!-- BaseTaskAdapter -->
-    <string name="created_prefix">Created at:</string>
-    <string name="priority_prefix">Priority:</string>
+    <string name="created_prefix">Created at: %1$s</string>
+    <string name="priority_prefix">Priority: %1$s</string>
 
     <!-- TaskFormHelper -->
     <string name="complete_all_fields">Complete all fields</string>

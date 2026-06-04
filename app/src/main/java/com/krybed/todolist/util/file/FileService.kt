@@ -21,10 +21,12 @@ import com.krybed.todolist.domain.model.Task
 import com.krybed.todolist.domain.repository.TaskRepository
 import com.krybed.todolist.util.converter.Converters
 import com.krybed.todolist.util.file.json.TaskJsonDto
-import com.krybed.todolist.util.file.json.TaskJsonMapper.toDomain
-import com.krybed.todolist.util.file.json.TaskJsonMapper.toJsonDto
+import com.krybed.todolist.data.mapper.TaskJsonMapper.toDomain
+import com.krybed.todolist.data.mapper.TaskJsonMapper.toJsonDto
 import com.krybed.todolist.util.file.xml.TaskXml
 import com.krybed.todolist.util.file.xml.TaskXmlWrapper
+import com.krybed.todolist.util.file.xml.toTask
+import com.krybed.todolist.util.file.xml.toXml
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
@@ -50,7 +52,7 @@ object FileService {
         ctx: Context,
         taskRepository: TaskRepository
     ) = withContext(Dispatchers.IO) {
-        val allTasks = taskRepository.getAll()
+        val allTasks = taskRepository.getAllOnce()
 
         writeToFile(ctx, FileType.CSV) { outputStream ->
             val csvBuilder = StringBuilder()
@@ -123,7 +125,7 @@ object FileService {
         ctx: Context,
         taskRepository: TaskRepository
     ) = withContext(Dispatchers.IO) {
-        val allTasks = taskRepository.getAll()
+        val allTasks = taskRepository.getAllOnce()
         val dtoList = allTasks.map { it.toJsonDto() }
 
         writeToFile(ctx, FileType.JSON) { outputStream ->
@@ -177,13 +179,13 @@ object FileService {
         ctx: Context,
         taskRepository: TaskRepository
     ) = withContext(Dispatchers.IO) {
-        val allTasks = taskRepository.getAll()
+        val allTasks = taskRepository.getAllOnce()
 
         writeToFile(ctx, FileType.XML) { outputStream ->
 //            val db = AppDatabase.getInstance(ctx.applicationContext)
 //            val allTasks = db.taskDao().getAllSync()
 
-            val taskXmlList = allTasks.map { TaskXml(it) }
+            val taskXmlList = allTasks.map { it.toXml() }
             val wrapper = TaskXmlWrapper(taskXmlList.toMutableList())
             val serializer: Serializer = Persister()
             serializer.write(wrapper, outputStream)

@@ -1,7 +1,8 @@
-package com.krybed.todolist.util.file.json
+package com.krybed.todolist.data.mapper
 
 import com.krybed.todolist.data.model.enums.Priority
 import com.krybed.todolist.domain.model.Task
+import com.krybed.todolist.util.file.json.TaskJsonDto
 
 object TaskJsonMapper {
     fun Task.toJsonDto(): TaskJsonDto =

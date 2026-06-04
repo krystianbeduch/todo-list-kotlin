@@ -28,24 +28,21 @@ class TaskXml() {
 
     @field:Element
     var createdAt: String = ""
+}
+fun TaskXml.toTask(): Task = Task(
+    id = id,
+    title = title,
+    deadline = Converters.fromStringToLocalDateTime(deadline),
+    priority = priority,
+    isDone = isDone,
+    createdAt = Converters.fromStringToLocalDateTime(createdAt)
+)
 
-    constructor(task: Task) : this() {
-        id = task.id
-        title = task.title
-        deadline = Converters.fromLocalDateTimeToString(task.deadline).toString()
-        priority = task.priority
-        isDone = task.isDone
-        createdAt = Converters.fromLocalDateTimeToString(task.createdAt).toString()
-    }
-
-    fun toTask(): Task {
-        return Task(
-            id = id,
-            title = title,
-            deadline = Converters.fromStringToLocalDateTime(deadline),
-            priority = priority,
-            isDone = isDone,
-            createdAt = Converters.fromStringToLocalDateTime(createdAt)
-        )
-    }
+fun Task.toXml(): TaskXml = TaskXml().apply {
+    id = this@toXml.id
+    title = this@toXml.title
+    deadline = Converters.fromLocalDateTimeToString(this@toXml.deadline).orEmpty()
+    priority = this@toXml.priority
+    isDone = this@toXml.isDone
+    createdAt = Converters.fromLocalDateTimeToString(this@toXml.createdAt).orEmpty()
 }

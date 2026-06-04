@@ -32,7 +32,7 @@
     <!-- MainActivity -->
     <string name="incorrect_file_format">Błędny format pliku</string>
     <string name="select_file_format">Wybierz format pliku:</string>
-    <string name="select_file">Wybierz plik </string>
+    <string name="select_file">Wybierz plik: %1$s</string>
     <string name="select_lang">Wybierz język:</string>
     <string name="delete_all_title">Usuwanie wszystkich zadań</string>
     <string name="delete_all_message">Czy na pewno chcesz usunąć wszystkie zadania</string>
@@ -59,7 +59,7 @@
     <string name="sort_status">Status</string>
 
     <!-- TaskAdapter -->
-    <string name="deadline_prefix">Termin:</string>
+    <string name="deadline_prefix">Termin: %1$s</string>
 
     <!-- HomeFragment -->
     <string name="confirm_delete_title">Potwierdzenie usunięcia</string>
@@ -77,8 +77,8 @@
     <string name="error_deleting_attachment">Błąd usuwania załącznika</string>
 
     <!-- BaseTaskAdapter -->
-    <string name="created_prefix">Utworzono:</string>
-    <string name="priority_prefix">Priorytet:</string>
+    <string name="created_prefix">Utworzono: %1$s</string>
+    <string name="priority_prefix">Priorytet: %1$s</string>
 
     <!-- TaskFormHelper -->
     <string name="complete_all_fields">Uzupełnij wszystkie pola</string>

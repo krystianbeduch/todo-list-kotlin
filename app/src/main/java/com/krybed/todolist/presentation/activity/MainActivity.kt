@@ -45,12 +45,10 @@ import java.time.LocalTime
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-//    private lateinit var taskViewModel: TaskViewModel
+    private var currentImportFileType: FileType? = null
     private val taskViewModel: TaskViewModel by viewModels {
         AppContainer.provideTaskViewModelFactory(applicationContext)
     }
-    private var currentImportFileType: FileType? = null
-
     private val filePickerLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
@@ -90,10 +88,6 @@ class MainActivity : AppCompatActivity() {
             R.id.navigation_notifications
         ).build()
 
-//        val navController = this.findNavController(
-//            R.id.nav_host_fragment_activity_main
-//        )
-
         val navHostFragment = supportFragmentManager.findFragmentById(
             R.id.nav_host_fragment_activity_main
         ) as NavHostFragment
@@ -107,57 +101,24 @@ class MainActivity : AppCompatActivity() {
         )
         NavigationUI.setupWithNavController(navView, navController)
 
-//        taskViewModel = ViewModelProvider(this)[TaskViewModel::class.java]
-
-//        val ctx = applicationContext
-//        val database = AppDatabase.getInstance(ctx)
-//        val attachmentMapper = AttachmentMapper()
-//
-//        val taskRepository = TaskRepositoryImpl(
-//            database.taskDao(),
-//            TaskMapper(),
-//            attachmentMapper
-//        )
-//
-//        val attachmentRepository = AttachmentRepositoryImpl(
-//            database.attachmentDao(),
-//            attachmentMapper
-//        )
-//
-//        val factory = TaskViewModelFactory(taskRepository, attachmentRepository)
-//        taskViewModel = ViewModelProvider(
-//            this, factory
-//        )[TaskViewModel::class.java]
-
-//        taskViewModel = ViewModelProvider(
-//            this,
-//            AppContainer.provideTaskViewModelFactory(applicationContext)
-//        )[TaskViewModel::class.java]
-
-//        taskViewModel.tasksForNotification.observe(this) { tasks ->
-//            val badge = navView.getOrCreateBadge(R.id.navigation_notifications)
-//            if (tasks.isNotEmpty()) {
-//                badge.isVisible = true
-//                badge.number = tasks.size
-//            }
-//            else {
-//                badge.isVisible = false
-//            }
-//        }
-
         // SAMPLE DATA
         seedDummyTasksIfNeeded()
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 taskViewModel.tasksForNotification.collect { tasks ->
-                    val badge = navView.getOrCreateBadge(R.id.navigation_notifications)
-                    if (tasks.isNotEmpty()) {
-                        badge.isVisible = true
-                        badge.number = tasks.size
-                    }
-                    else {
-                        badge.isVisible = false
+//                    val badge = navView.getOrCreateBadge(R.id.navigation_notifications)
+//                    if (tasks.isNotEmpty()) {
+//                        badge.isVisible = true
+//                        badge.number = tasks.size
+//                    }
+//                    else {
+//                        badge.isVisible = false
+//                    }
+
+                    navView.getOrCreateBadge(R.id.navigation_notifications).apply {
+                        isVisible = tasks.isNotEmpty()
+                        if (isVisible) number = tasks.size
                     }
                 }
             }
@@ -235,11 +196,10 @@ class MainActivity : AppCompatActivity() {
             type = fileType.mimeType
             addCategory(Intent.CATEGORY_OPENABLE)
         }
-
         filePickerLauncher.launch(
             Intent.createChooser(
                 intent,
-                getString(R.string.select_file) + fileType.name
+                getString(R.string.select_file, fileType.name)
             )
         )
     }
@@ -341,9 +301,5 @@ class MainActivity : AppCompatActivity() {
                 Priority.HIGH
             )
         )
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
     }
 }

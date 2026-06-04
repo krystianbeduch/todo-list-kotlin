@@ -8,7 +8,6 @@ import android.widget.PopupMenu
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.krybed.todolist.R
-import com.krybed.todolist.data.model.TaskEntity
 import com.krybed.todolist.domain.model.Task
 import com.krybed.todolist.util.converter.Converters
 import com.krybed.todolist.util.task.BaseTaskAdapter
@@ -38,10 +37,11 @@ class TaskAdapter(
     ) {
         val task = tasks[position]
         val deadlineText = holder.itemView.context.getString(
-            R.string.deadline_prefix
-        ) + " " + Converters.formatLocalDateTimeToStringWithDayName(
-            holder.itemView.context,
-            task.deadline
+            R.string.deadline_prefix,
+            Converters.formatLocalDateTimeToStringWithDayName(
+                holder.itemView.context,
+                task.deadline
+            )
         )
 
         holder.deadlineView.text = deadlineText
@@ -96,14 +96,6 @@ class TaskAdapter(
             true
         }
     }
-
-    // to del raczej
-//    fun notifyTaskChanged(taskId: Int) {
-//        val position = tasks.indexOfFirst { it.id == taskId }
-//        if (position != -1) {
-//            notifyItemChanged(position)
-//        }
-//    }
 
     class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val titleView: TextView = itemView.findViewById(R.id.taskTitle)

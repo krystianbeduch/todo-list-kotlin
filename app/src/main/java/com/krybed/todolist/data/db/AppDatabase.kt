@@ -2,7 +2,6 @@ package com.krybed.todolist.data.db
 
 import android.content.Context
 import androidx.room.Database
-import androidx.room.InvalidationTracker
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
@@ -42,13 +41,5 @@ abstract class AppDatabase : RoomDatabase() {
                 AppDatabase::class.java,
                 DATABASE_NAME
             ).fallbackToDestructiveMigration(false).build()
-    }
-
-    override fun createInvalidationTracker(): InvalidationTracker {
-        TODO("Not yet implemented")
-    }
-
-    override fun clearAllTables() {
-        TODO("Not yet implemented")
     }
 }

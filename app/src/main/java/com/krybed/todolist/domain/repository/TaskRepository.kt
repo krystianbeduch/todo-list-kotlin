@@ -1,9 +1,5 @@
 package com.krybed.todolist.domain.repository
 
-import android.content.Context
-import androidx.lifecycle.LiveData
-import com.krybed.todolist.data.db.AppDatabase
-import com.krybed.todolist.data.model.TaskEntity
 import com.krybed.todolist.domain.model.Task
 import kotlinx.coroutines.flow.Flow
 
@@ -17,6 +13,6 @@ interface TaskRepository {
     suspend fun changeStatus(taskId: Int, isDone: Boolean)
 
     // File
-    suspend fun getAll(): List<Task>
+    suspend fun getAllOnce(): List<Task>
     suspend fun insertAll(tasks: List<Task>)
 }

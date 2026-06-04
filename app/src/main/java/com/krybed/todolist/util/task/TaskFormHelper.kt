@@ -23,6 +23,7 @@ import java.time.format.DateTimeParseException
 import java.util.Calendar
 
 class TaskFormHelper (
+    private val taskViewModel: TaskViewModel,
     private val ctx: Context,
     private val titleEditText: EditText,
     private val deadlineEditText: EditText,
@@ -31,8 +32,8 @@ class TaskFormHelper (
 
     private val selectedDateTime: Calendar = Calendar.getInstance()
 
-    val taskViewModel: TaskViewModel =
-        ViewModelProvider(ctx as ViewModelStoreOwner)[TaskViewModel::class.java]
+//    val taskViewModel: TaskViewModel =
+//        ViewModelProvider(ctx as ViewModelStoreOwner)[TaskViewModel::class.java]
 
     fun interface OnTaskSaveCallback {
         fun onSuccess(task: Task)
@@ -87,11 +88,8 @@ class TaskFormHelper (
                 deadline = deadline,
                 priority = selectedPriority
             )
-//            existingTask.title = title
-//            existingTask.deadline = deadline
-//            existingTask.priority = selectedPriority
 
-            taskViewModel.update(existingTask)
+            taskViewModel.update(updatedTask)
 
             Toast.makeText(
                 ctx,
@@ -99,15 +97,17 @@ class TaskFormHelper (
                 Toast.LENGTH_SHORT
             ).show()
 
-            callback.onSuccess(existingTask)
+//            callback.onSuccess(existingTask)
+            callback.onSuccess(updatedTask)
         }
         else {
             val newTask = Task(
                 title = title,
                 deadline = deadline,
-                isDone = false,
-                priority = selectedPriority,
-                createdAt = LocalDateTime.now()
+//                isDone = false,
+                priority = selectedPriority
+//                ,
+//                createdAt = LocalDateTime.now()
             )
 
             taskViewModel.insert(newTask)
@@ -137,21 +137,59 @@ class TaskFormHelper (
                 position: Int,
                 convertView: View?,
                 parent: ViewGroup
-            ): View {
-                val view = super.getView(position, convertView, parent)
-                val item = getItem(position)
-                if (item != null) {
-                    (view as TextView).text = ctx.getString(item.stringResId)
-                }
-                return view
-            }
+            ): View =
+                bindPriorityText(
+                    super.getView(position, convertView, parent),
+                    position
+                )
+//                getPriorityView(position) {
+//                    super.getView(position, convertView, parent)
+
+//                val view = super.getView(position, convertView, parent)
+//                val item = getItem(position)
+//                if (item != null) {
+//                    (view as TextView).text = ctx.getString(item.stringResId)
+//                }
+//                return view
+//            }
 
             override fun getDropDownView(
                 position: Int,
                 convertView: View?,
                 parent: ViewGroup
-            ): View? {
-                val view = super.getDropDownView(position, convertView, parent)
+            ): View =
+                bindPriorityText(
+                    super.getDropDownView(position, convertView, parent),
+                    position
+                )
+
+//                getPriorityView(position) {
+//                    super.getView(position, convertView, parent)
+
+//            ? {
+//                val view = super.getDropDownView(position, convertView, parent)
+//                val item = getItem(position)
+//                if (item != null) {
+//                    (view as TextView).text = ctx.getString(item.stringResId)
+//                }
+//                return view
+//            }
+
+//            private fun getPriorityView(
+//                position: Int,
+////                convertView: View?,
+////                parent: ViewGroup,
+//                viewProvider: () -> View
+//            ): View {
+//                val view = viewProvider()
+//                val item = getItem(position)
+//                if (item != null) {
+//                    (view as TextView).text = ctx.getString(item.stringResId)
+//                }
+//                return view
+//            }
+
+            private fun bindPriorityText(view: View, position: Int): View {
                 val item = getItem(position)
                 if (item != null) {
                     (view as TextView).text = ctx.getString(item.stringResId)
@@ -194,16 +232,14 @@ class TaskFormHelper (
         timePickerDialog.show()
     }
 
-    //?
-    private fun updateDeadlineText() =
-        deadlineEditText.setText(
-            Converters.fromLocalDateTimeToString(
-            LocalDateTime.of(
-                selectedDateTime.get(Calendar.YEAR),
-                selectedDateTime.get(Calendar.MONTH) + 1,
-                selectedDateTime.get(Calendar.DAY_OF_MONTH),
-                selectedDateTime.get(Calendar.HOUR_OF_DAY),
-                selectedDateTime.get(Calendar.MINUTE)
-            )
-        ))
+    private fun updateDeadlineText() {
+        val dateTime = LocalDateTime.of(
+            selectedDateTime.get(Calendar.YEAR),
+            selectedDateTime.get(Calendar.MONTH) + 1,
+            selectedDateTime.get(Calendar.DAY_OF_MONTH),
+            selectedDateTime.get(Calendar.HOUR_OF_DAY),
+            selectedDateTime.get(Calendar.MINUTE)
+        )
+        deadlineEditText.setText(Converters.fromLocalDateTimeToString(dateTime))
+    }
 }

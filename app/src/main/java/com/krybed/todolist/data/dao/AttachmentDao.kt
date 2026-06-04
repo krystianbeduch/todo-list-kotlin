@@ -11,23 +11,15 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface AttachmentDao {
 
-//    @Query("SELECT * FROM AttachmentEntity")
-//    fun getAllAttachments(): List<AttachmentEntity>
-//    fun getAllAttachments(): Flow<List<AttachmentEntity>>
-    // ?
-
     @Query("SELECT * FROM AttachmentEntity WHERE task_id = :taskId")
-//    fun getAttachmentsForTask(taskId: Int): List<AttachmentEntity>
     fun getByTaskId(taskId: Int): Flow<List<AttachmentEntity>>
 
     @Query("SELECT * FROM AttachmentEntity WHERE task_id = :taskId")
     suspend fun getByTaskIdOnce(taskId: Int): List<AttachmentEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-//    fun insert(attachment: AttachmentEntity)
     suspend fun insert(attachment: AttachmentEntity)
 
     @Delete
-//    fun delete(attachment: AttachmentEntity)
     suspend fun delete(attachment: AttachmentEntity)
 }

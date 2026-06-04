@@ -14,7 +14,7 @@ import com.krybed.todolist.util.converter.Converters
 import com.krybed.todolist.util.task.BaseTaskAdapter
 
 class NotificationAdapter(
-    private val ctx: Context,
+//    private val ctx: Context,
     tasks: List<Task>,
 ) : BaseTaskAdapter<NotificationAdapter.NotificationTaskViewHolder>(tasks) {
 
@@ -37,7 +37,7 @@ class NotificationAdapter(
     ) {
         val task = tasks[position]
         val notificationTypeText =
-            task.notificationType.getTextToNotification(ctx) +
+            task.notificationType.getTextToNotification(holder.itemView.context) +
                     Converters.formatLocalDateTimeToStringWithDayName(
                         holder.itemView.context,
                         task.deadline

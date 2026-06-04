@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.krybed.todolist.R
@@ -30,18 +31,25 @@ abstract class BaseTaskAdapter<VH : RecyclerView.ViewHolder>(
     ) {
         titleView.text = task.title
 
-        val createdAtText = ctx.getString(R.string.created_prefix) +
-                " " + Converters.formatLocalDateTimeToStringWithDayName(ctx, task.createdAt)
+        val createdAtText = ctx.getString(
+            R.string.created_prefix,
+            Converters.formatLocalDateTimeToStringWithDayName(ctx, task.createdAt)
+            )
         createdAtView.text = createdAtText
 
-        val priorityText: String = ctx.getString(R.string.priority_prefix) +
-                " " + ctx.getString(task.priority.stringResId)
+        val priorityText: String = ctx.getString(
+            R.string.priority_prefix,
+            ctx.getString(task.priority.stringResId)
+        )
         priorityView.text = priorityText
 
         when (task.priority) {
-            Priority.HIGH -> priorityView.setTextColor(Color.RED)
-            Priority.MEDIUM -> priorityView.setTextColor(Color.rgb(255, 165, 0))
-            Priority.LOW -> priorityView.setTextColor(Color.YELLOW)
+//            Priority.HIGH -> priorityView.setTextColor(Color.RED)
+//            Priority.MEDIUM -> priorityView.setTextColor(Color.rgb(255, 165, 0))
+            Priority.HIGH -> priorityView.setTextColor(ContextCompat.getColor(ctx, R.color.priority_high))
+            Priority.MEDIUM -> priorityView.setTextColor(ContextCompat.getColor(ctx, R.color.priority_medium))
+            Priority.LOW -> priorityView.setTextColor(ContextCompat.getColor(ctx, R.color.priority_low))
+//            Priority.LOW -> priorityView.setTextColor(Color.YELLOW)
         }
 
         doneView.visibility = if (task.isDone) View.VISIBLE else View.GONE

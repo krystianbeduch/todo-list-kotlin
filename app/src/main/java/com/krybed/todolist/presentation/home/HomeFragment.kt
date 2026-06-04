@@ -18,58 +18,40 @@ import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.viewModels
 import androidx.core.net.toUri
 import androidx.core.view.MenuHost
 import androidx.core.view.MenuProvider
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.krybed.todolist.R
-import com.krybed.todolist.data.db.AppDatabase
-import com.krybed.todolist.data.mapper.AttachmentMapper
-import com.krybed.todolist.data.mapper.TaskMapper
 import com.krybed.todolist.data.model.enums.NotificationType
-import com.krybed.todolist.data.model.enums.Priority
 import com.krybed.todolist.data.model.enums.SortType
-import com.krybed.todolist.data.repository.AttachmentRepositoryImpl
-import com.krybed.todolist.data.repository.TaskRepositoryImpl
 import com.krybed.todolist.databinding.FragmentHomeBinding
 import com.krybed.todolist.domain.model.Attachment
 import com.krybed.todolist.domain.model.Task
 import com.krybed.todolist.presentation.AppContainer
 import com.krybed.todolist.presentation.activity.TaskActivity
-import com.krybed.todolist.presentation.applyRecyclerViewInsets
 import com.krybed.todolist.presentation.viewmodel.TaskViewModel
-import com.krybed.todolist.presentation.viewmodel.TaskViewModelFactory
 import com.krybed.todolist.util.file.FileService
 import com.krybed.todolist.util.lang.LocalHelper
 import com.krybed.todolist.util.notification.NotificationUtils
 import kotlinx.coroutines.launch
 import java.time.LocalDateTime
-import java.time.LocalTime
 import java.util.Locale
-import kotlin.getValue
 
 class HomeFragment : Fragment() {
 
     private var binding: FragmentHomeBinding? = null
     private val b get() = binding!!
-
     private lateinit var taskAdapter: TaskAdapter
-//    private lateinit var taskViewModel: TaskViewModel
+    private var currentAttachmentTask: Task? = null
     private val taskViewModel: TaskViewModel by activityViewModels {
         AppContainer.provideTaskViewModelFactory(requireContext().applicationContext)
     }
-
-    private var currentAttachmentTask: Task? = null
 
     private val attachmentPickerLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
@@ -104,7 +86,6 @@ class HomeFragment : Fragment() {
             }
         }
 
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -115,32 +96,8 @@ class HomeFragment : Fragment() {
             container,
             false
         )
-
-//        val ctx = requireContext().applicationContext
-//        val database = AppDatabase.getInstance(ctx)
-//        val attachmentMapper = AttachmentMapper()
-
-//        val taskRepository = TaskRepositoryImpl(
-//            database.taskDao(),
-//            TaskMapper(),
-//            attachmentMapper
-//        )
-
-//        val attachmentRepository = AttachmentRepositoryImpl(
-//            database.attachmentDao(),
-//            attachmentMapper
-//        )
-
-//        val factory = TaskViewModelFactory(taskRepository, attachmentRepository)
-
-//        taskViewModel = ViewModelProvider(
-//            requireActivity(),
-//            factory
-//        )[TaskViewModel::class.java]
-
         NotificationUtils.createNotificationChannel(requireContext())
         initRecyclerView()
-
         return b.root
     }
 
@@ -149,53 +106,52 @@ class HomeFragment : Fragment() {
         savedInstanceState: Bundle?
     ) {
         super.onViewCreated(view, savedInstanceState)
-
-//        b.tasksRecyclerView.applyRecyclerViewInsets()
-
-        //
-//        ViewCompat.setOnApplyWindowInsetsListener(b.tasksRecyclerView) { recyclerView, insets ->
-//            val bars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-//            recyclerView.setPadding(
-//                recyclerView.paddingLeft,
-//                bars.top,
-//                recyclerView.paddingRight,
-//                bars.bottom + dpToPx(72)
-//            )
-//            insets
-//        }
-//        ViewCompat.requestApplyInsets(b.tasksRecyclerView)
-        //
-
         observeViewModel()
         setupMenu()
     }
 
     private fun observeViewModel() {
+//        viewLifecycleOwner.lifecycleScope.launch {
+//            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+//
+//                launch {
+//                    taskViewModel.tasks.collect { tasks ->
+//                        taskAdapter.updateTasks(tasks)
+//
+//                        val checked = taskViewModel.notificationChecked.value
+//                        checkForUpcomingDeadlines(tasks, checked)
+//
+//                        if (!checked) {
+//                            taskViewModel.markNotificationChecked()
+//                        }
+//                    }
+//                }
+//
+//                launch {
+//                    taskViewModel.notificationChecked.collect { checked ->
+//                        val safeTasks = taskViewModel.tasks.value
+//                        checkForUpcomingDeadlines(safeTasks, checked)
+//
+//                        if (!checked) {
+//                            taskViewModel.markNotificationChecked()
+//                        }
+//                    }
+//                }
+//            }
+//        }
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                taskViewModel.tasks.collect { tasks ->
+                    taskAdapter.updateTasks(tasks)
 
-                launch {
-                    taskViewModel.tasks.collect { tasks ->
-                        taskAdapter.updateTasks(tasks)
+//                    val checked = taskViewModel.notificationChecked.value
+                    checkForUpcomingDeadlines(tasks
+//                        , checked
+                    )
 
-                        val checked = taskViewModel.notificationChecked.value
-                        checkForUpcomingDeadlines(tasks, checked)
-
-                        if (!checked) {
-                            taskViewModel.markNotificationChecked()
-                        }
-                    }
-                }
-
-                launch {
-                    taskViewModel.notificationChecked.collect { checked ->
-                        val safeTasks = taskViewModel.tasks.value
-                        checkForUpcomingDeadlines(safeTasks, checked)
-
-                        if (!checked) {
-                            taskViewModel.markNotificationChecked()
-                        }
-                    }
+//                    if (!checked) {
+//                        taskViewModel.markNotificationChecked()
+//                    }
                 }
             }
         }
@@ -261,9 +217,6 @@ class HomeFragment : Fragment() {
             }
         }, viewLifecycleOwner)
     }
-
-    private fun dpToPx(dp: Int): Int =
-        (dp * resources.displayMetrics.density).toInt()
 
     private fun initRecyclerView() {
         b.tasksRecyclerView.layoutManager = LinearLayoutManager(requireContext())
@@ -422,34 +375,91 @@ class HomeFragment : Fragment() {
         }
     }
 
+//    private fun checkForUpcomingDeadlines(
+//        tasks: List<Task>,
+//        isNotificationShown: Boolean
+//    ) {
+//        val now = LocalDateTime.now()
+//        val threshold = now.plusHours(24)
+//        val tasksToNotify = mutableListOf<Task>()
+//
+//        for (task in tasks) {
+//            if (!task.isDone) {
+//                val notificationType = when {
+//                    task.deadline.isBefore(now) -> NotificationType.OVERDUE
+//                    task.deadline.isAfter(now) && task.deadline.isBefore(threshold) ->
+//                        NotificationType.UPCOMING
+//                    else -> null
+//                }
+//
+//                if (notificationType != null) {
+//                    tasksToNotify.add(task.copy(notificationType = notificationType))
+//
+//                    if (!isNotificationShown) {
+//                        NotificationUtils.showTaskNotification(
+//                            requireContext(),
+//                            task.copy(notificationType = notificationType)
+//                        )
+//                    }
+//                }
+//            }
+//        }
+//        taskViewModel.updateTasksForNotification(tasksToNotify)
+//    }
+
     private fun checkForUpcomingDeadlines(
         tasks: List<Task>,
-        isNotificationShown: Boolean
+//        isNotificationShown: Boolean
     ) {
         val now = LocalDateTime.now()
         val threshold = now.plusHours(24)
-        val tasksToNotify = mutableListOf<Task>()
 
-        for (task in tasks) {
-            if (!task.isDone) {
-                val notificationType = when {
-                    task.deadline.isBefore(now) -> NotificationType.OVERDUE
-                    task.deadline.isAfter(now) && task.deadline.isBefore(threshold) ->
-                        NotificationType.UPCOMING
-                    else -> null
-                }
-                if (notificationType != null) {
-                    tasksToNotify.add(task.copy(notificationType = notificationType))
-                    if (!isNotificationShown) {
-                        NotificationUtils.showTaskNotification(
-                            requireContext(),
-                            task.copy(notificationType = notificationType)
-                        )
-                    }
-                }
+        val tasksToNotify = tasks.mapNotNull { task ->
+            if (task.isDone) return@mapNotNull null
+
+            val notificationType = when {
+                task.deadline.isBefore(now) -> NotificationType.OVERDUE
+                task.deadline.isAfter(now) && task.deadline.isBefore(threshold) ->
+                    NotificationType.UPCOMING
+                else -> null
+            }
+
+            notificationType?.let {
+                task.copy(notificationType = it)
             }
         }
+
         taskViewModel.updateTasksForNotification(tasksToNotify)
+
+        tasksToNotify.forEach { task ->
+            NotificationUtils.showTaskNotification(requireContext(), task)
+        }
+
+
+//        val tasksToNotify = mutableListOf<Task>()
+//
+//        for (task in tasks) {
+//            if (!task.isDone) {
+//                val notificationType = when {
+//                    task.deadline.isBefore(now) -> NotificationType.OVERDUE
+//                    task.deadline.isAfter(now) && task.deadline.isBefore(threshold) ->
+//                        NotificationType.UPCOMING
+//                    else -> null
+//                }
+//
+//                if (notificationType != null) {
+//                    tasksToNotify.add(task.copy(notificationType = notificationType))
+//
+//                    if (!isNotificationShown) {
+//                        NotificationUtils.showTaskNotification(
+//                            requireContext(),
+//                            task.copy(notificationType = notificationType)
+//                        )
+//                    }
+//                }
+//            }
+//        }
+//        taskViewModel.updateTasksForNotification(tasksToNotify)
     }
 
     override fun onDestroyView() {

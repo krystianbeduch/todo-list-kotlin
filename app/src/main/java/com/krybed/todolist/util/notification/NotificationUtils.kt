@@ -15,21 +15,19 @@ import com.krybed.todolist.domain.model.Task
 import com.krybed.todolist.util.converter.Converters
 
 object NotificationUtils {
-    const val CHANNEL_ID = "tasks_channel"
+    const val CHANNEL_ID = "tasks_channel_kt"
 
     fun createNotificationChannel(ctx: Context) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            val name: CharSequence = "Task Notifications"
-            val description = "Notifications for due or overdue tasks"
-            val importance = NotificationManager.IMPORTANCE_HIGH
+        val name: CharSequence = "Task Notifications"
+        val description = "Notifications for due or overdue tasks"
+        val importance = NotificationManager.IMPORTANCE_HIGH
 
-            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
-                this.description = description
-            }
-
-            val notificationManager = ctx.getSystemService(NotificationManager::class.java)
-            notificationManager.createNotificationChannel(channel)
+        val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
+            this.description = description
         }
+
+        val notificationManager = ctx.getSystemService(NotificationManager::class.java)
+        notificationManager.createNotificationChannel(channel)
     }
 
     fun showTaskNotification(ctx: Context, task: Task) {
@@ -40,13 +38,14 @@ object NotificationUtils {
                     Manifest.permission.POST_NOTIFICATIONS
                 ) != PackageManager.PERMISSION_GRANTED
             ) {
-                // User has nt consented to receive notifications
+                // User has not consented to receive notifications
                 return
             }
         }
 
         val builder = NotificationCompat.Builder(ctx, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_notifications_black_24dp)
+            .setContentTitle(task.notificationType.getTextToNotification(ctx))
             .setContentText(
                 "${task.title} : ${Converters.formatLocalDateTimeToStringWithDayName(ctx, task.deadline)}"
             )

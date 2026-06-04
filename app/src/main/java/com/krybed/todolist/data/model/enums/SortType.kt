@@ -1,11 +1,10 @@
 package com.krybed.todolist.data.model.enums
 
 import android.content.Context
-import androidx.annotation.StringRes
 import com.krybed.todolist.R
 
 enum class SortType (
-    @StringRes val stringResId: Int
+    val stringResId: Int
 ) {
     CREATED_DATE(R.string.sort_created_at),
     TITLE(R.string.sort_title),

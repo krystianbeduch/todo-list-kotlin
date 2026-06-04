@@ -12,6 +12,6 @@ enum class NotificationType {
         when (this) {
             UPCOMING -> context.getString(R.string.text_notification_upcoming) + "\n"
             OVERDUE -> context.getString(R.string.text_notification_overdue) + "\n"
-            else -> ""
+            NONE -> ""
         }
 }

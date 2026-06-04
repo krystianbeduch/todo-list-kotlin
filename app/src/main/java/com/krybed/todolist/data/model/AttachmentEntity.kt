@@ -10,8 +10,8 @@ import androidx.room.PrimaryKey
     foreignKeys = [
         ForeignKey(
             entity = TaskEntity::class,
-            parentColumns = ["id"],      // PK Task
-            childColumns = ["task_id"],  // FK Attachment
+            parentColumns = ["id"],         // PK Task
+            childColumns = ["task_id"],     // FK Attachment
             onDelete = ForeignKey.CASCADE
         )
     ],
@@ -20,13 +20,13 @@ import androidx.room.PrimaryKey
 data class AttachmentEntity (
 
     @PrimaryKey(autoGenerate = true)
-    var id: Int = 0,
+    val id: Int = 0,
 
     @ColumnInfo(name = "task_id")
-    var taskId: Int,
+    val taskId: Int,
 
-    var filename: String,
+    val filename: String,
 
     @ColumnInfo(name = "file_path")
-    var filePath: String
+    val filePath: String
 )
