@@ -10,7 +10,6 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import androidx.core.content.ContextCompat
 import com.krybed.todolist.R
-import com.krybed.todolist.data.model.TaskEntity
 import com.krybed.todolist.domain.model.Task
 import com.krybed.todolist.util.converter.Converters
 

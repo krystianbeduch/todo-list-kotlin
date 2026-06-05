@@ -10,10 +10,7 @@ import android.widget.EditText
 import android.widget.Spinner
 import android.widget.TextView
 import android.widget.Toast
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelStoreOwner
 import com.krybed.todolist.R
-import com.krybed.todolist.data.model.TaskEntity
 import com.krybed.todolist.data.model.enums.Priority
 import com.krybed.todolist.domain.model.Task
 import com.krybed.todolist.presentation.viewmodel.TaskViewModel
@@ -31,9 +28,6 @@ class TaskFormHelper (
 ) {
 
     private val selectedDateTime: Calendar = Calendar.getInstance()
-
-//    val taskViewModel: TaskViewModel =
-//        ViewModelProvider(ctx as ViewModelStoreOwner)[TaskViewModel::class.java]
 
     fun interface OnTaskSaveCallback {
         fun onSuccess(task: Task)
@@ -97,17 +91,13 @@ class TaskFormHelper (
                 Toast.LENGTH_SHORT
             ).show()
 
-//            callback.onSuccess(existingTask)
             callback.onSuccess(updatedTask)
         }
         else {
             val newTask = Task(
                 title = title,
                 deadline = deadline,
-//                isDone = false,
                 priority = selectedPriority
-//                ,
-//                createdAt = LocalDateTime.now()
             )
 
             taskViewModel.insert(newTask)
@@ -142,16 +132,6 @@ class TaskFormHelper (
                     super.getView(position, convertView, parent),
                     position
                 )
-//                getPriorityView(position) {
-//                    super.getView(position, convertView, parent)
-
-//                val view = super.getView(position, convertView, parent)
-//                val item = getItem(position)
-//                if (item != null) {
-//                    (view as TextView).text = ctx.getString(item.stringResId)
-//                }
-//                return view
-//            }
 
             override fun getDropDownView(
                 position: Int,
@@ -162,32 +142,6 @@ class TaskFormHelper (
                     super.getDropDownView(position, convertView, parent),
                     position
                 )
-
-//                getPriorityView(position) {
-//                    super.getView(position, convertView, parent)
-
-//            ? {
-//                val view = super.getDropDownView(position, convertView, parent)
-//                val item = getItem(position)
-//                if (item != null) {
-//                    (view as TextView).text = ctx.getString(item.stringResId)
-//                }
-//                return view
-//            }
-
-//            private fun getPriorityView(
-//                position: Int,
-////                convertView: View?,
-////                parent: ViewGroup,
-//                viewProvider: () -> View
-//            ): View {
-//                val view = viewProvider()
-//                val item = getItem(position)
-//                if (item != null) {
-//                    (view as TextView).text = ctx.getString(item.stringResId)
-//                }
-//                return view
-//            }
 
             private fun bindPriorityText(view: View, position: Int): View {
                 val item = getItem(position)

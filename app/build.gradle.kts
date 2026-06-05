@@ -11,11 +11,6 @@ plugins {
 
 android {
     namespace = "com.krybed.todolist"
-//    compileSdk {
-//        version = release(36) {
-//            minorApiLevel = 1
-//        }
-//    }
     compileSdk = 37
 
     defaultConfig {
@@ -38,16 +33,16 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_21
-        targetCompatibility = JavaVersion.VERSION_21
+        sourceCompatibility = JavaVersion.VERSION_24
+        targetCompatibility = JavaVersion.VERSION_24
     }
     buildFeatures {
         viewBinding = true
     }
+}
 
-    kotlin {
-        jvmToolchain(21)
-    }
+kotlin {
+    jvmToolchain(24)
 }
 
 dependencies {
@@ -59,7 +54,6 @@ dependencies {
     implementation(libs.androidx.activity.ktx)
     implementation(libs.fragment.ktx)
 
-//    implementation(libs.lifecycle.livedata.ktx)
     implementation(libs.lifecycle.viewmodel.ktx)
 
     implementation(libs.navigation.fragment.ktx)
@@ -73,22 +67,11 @@ dependencies {
     implementation(libs.simple.xml)
 
     testImplementation(libs.junit)
-
-//    implementation(platform(libs.androidx.compose.bom))
-//    implementation(libs.androidx.activity.compose)
-//    implementation(libs.androidx.compose.material3)
-//    implementation(libs.androidx.compose.material3.adaptive.navigation.suite)
-//    implementation(libs.androidx.compose.ui)
-//    implementation(libs.androidx.compose.ui.graphics)
-//    implementation(libs.androidx.compose.ui.tooling.preview)
-//
-//    implementation(libs.androidx.lifecycle.runtime.ktx)
-
-//    testImplementation(libs.junit)
-//    androidTestImplementation(platform(libs.androidx.compose.bom))
-//    androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.junit)
-//    debugImplementation(libs.androidx.compose.ui.test.manifest)
-//    debugImplementation(libs.androidx.compose.ui.tooling)
+
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.coroutines.android)
+    testImplementation(libs.kotlinx.coroutines.test)
+    androidTestImplementation(libs.kotlinx.coroutines.test)
 }

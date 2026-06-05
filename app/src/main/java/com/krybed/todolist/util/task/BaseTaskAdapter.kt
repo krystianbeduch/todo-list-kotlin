@@ -1,7 +1,6 @@
 package com.krybed.todolist.util.task
 
 import android.content.Context
-import android.graphics.Color
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
@@ -9,7 +8,6 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.krybed.todolist.R
-import com.krybed.todolist.data.model.TaskEntity
 import com.krybed.todolist.data.model.enums.Priority
 import com.krybed.todolist.domain.model.Task
 import com.krybed.todolist.util.converter.Converters
@@ -44,12 +42,9 @@ abstract class BaseTaskAdapter<VH : RecyclerView.ViewHolder>(
         priorityView.text = priorityText
 
         when (task.priority) {
-//            Priority.HIGH -> priorityView.setTextColor(Color.RED)
-//            Priority.MEDIUM -> priorityView.setTextColor(Color.rgb(255, 165, 0))
             Priority.HIGH -> priorityView.setTextColor(ContextCompat.getColor(ctx, R.color.priority_high))
             Priority.MEDIUM -> priorityView.setTextColor(ContextCompat.getColor(ctx, R.color.priority_medium))
             Priority.LOW -> priorityView.setTextColor(ContextCompat.getColor(ctx, R.color.priority_low))
-//            Priority.LOW -> priorityView.setTextColor(Color.YELLOW)
         }
 
         doneView.visibility = if (task.isDone) View.VISIBLE else View.GONE

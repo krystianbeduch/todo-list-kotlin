@@ -15,15 +15,14 @@ import android.widget.Toast
 import androidx.core.content.FileProvider
 import androidx.core.net.toUri
 import com.krybed.todolist.R
+import com.krybed.todolist.data.mapper.TaskJsonMapper.toDomain
+import com.krybed.todolist.data.mapper.TaskJsonMapper.toJsonDto
 import com.krybed.todolist.data.model.enums.FileType
 import com.krybed.todolist.data.model.enums.Priority
 import com.krybed.todolist.domain.model.Task
 import com.krybed.todolist.domain.repository.TaskRepository
 import com.krybed.todolist.util.converter.Converters
 import com.krybed.todolist.util.file.json.TaskJsonDto
-import com.krybed.todolist.data.mapper.TaskJsonMapper.toDomain
-import com.krybed.todolist.data.mapper.TaskJsonMapper.toJsonDto
-import com.krybed.todolist.util.file.xml.TaskXml
 import com.krybed.todolist.util.file.xml.TaskXmlWrapper
 import com.krybed.todolist.util.file.xml.toTask
 import com.krybed.todolist.util.file.xml.toXml
@@ -132,12 +131,6 @@ object FileService {
             outputStream.write(json.encodeToString(
                     dtoList
                 ).toByteArray(StandardCharsets.UTF_8))
-
-//            outputStream.write(
-//                gson.toJson(
-//                    allTasks
-//                ).toByteArray(StandardCharsets.UTF_8)
-//            )
         }
     }
 
@@ -146,29 +139,13 @@ object FileService {
         fileUri: Uri,
         taskRepository: TaskRepository
     ) = withContext(Dispatchers.IO) {
-//        val gson = GsonBuilder()
-//            .registerTypeAdapter(Task::class.java, TaskTypeJsonAdapter())
-//            .create()
-
         val tasks = readFromFile(ctx, fileUri, FileType.JSON) { inputStream ->
             BufferedReader(InputStreamReader(
                 inputStream, StandardCharsets.UTF_8
             )).use { reader ->
-//                val taskListType: Type = object : TypeToken<List<Task>>(){}.type
                 val jsonString = reader.readText()
                 val dtoList = json.decodeFromString<List<TaskJsonDto>>(jsonString)
                 dtoList.map { it.toDomain() }
-
-//                tasks.addAll(gson.fromJson(reader, taskListType))
-//                val gson = GsonBuilder()
-//                    .registerTypeAdapter(Task::class.java, TaskTypeJsonAdapter())
-//                    .create()
-//                gson.fromJson<List<Task>>(reader, taskListType)
-
-//                    val db = AppDatabase.getInstance(ctx.applicationContext)
-//                    for (task in tasks) {
-//                        db.taskDao().insert(task)
-//                    }
             }
         } ?: return@withContext
 
@@ -182,9 +159,6 @@ object FileService {
         val allTasks = taskRepository.getAllOnce()
 
         writeToFile(ctx, FileType.XML) { outputStream ->
-//            val db = AppDatabase.getInstance(ctx.applicationContext)
-//            val allTasks = db.taskDao().getAllSync()
-
             val taskXmlList = allTasks.map { it.toXml() }
             val wrapper = TaskXmlWrapper(taskXmlList.toMutableList())
             val serializer: Serializer = Persister()
@@ -200,12 +174,6 @@ object FileService {
         val tasks = readFromFile(ctx, fileUri, FileType.XML) { inputStream ->
             val serializer: Serializer = Persister()
             val wrapper = serializer.read(TaskXmlWrapper::class.java, inputStream)
-//            val tasks = wrapper.taskXmlList.map { it.toTask() }
-//
-//            val db = AppDatabase.getInstance(ctx.applicationContext)
-//            for (task in tasks) {
-//                db.taskDao().insert(task)
-//            }
             wrapper.taskXmlList.map { it.toTask() }
         } ?: return@withContext
 
@@ -402,7 +370,6 @@ object FileService {
         writer: (OutputStream) -> Unit
     ) {
         val filename = "task_export_${System.currentTimeMillis()}${fileType.extension}"
-//        executor.execute {
             try {
                 openOutputStream(ctx, filename, fileType).use { outputStream ->
                     writer(outputStream)
@@ -419,31 +386,28 @@ object FileService {
                 )
                 Log.e("Error export ${fileType.name}", Log.getStackTraceString(e))
             }
-//        }
     }
 
-    private suspend fun<T> readFromFile(
+    private fun<T> readFromFile(
         ctx: Context,
         fileUri: Uri,
         fileType: FileType,
         reader: (InputStream) -> T
     ): T? {
-//        executor.execute {
-            return try {
-                val result = openInputStream(ctx, fileUri, fileType).use { inputStream ->
-                    reader(inputStream)
-                }
-                showToast(ctx, "Import ${fileType.name}")
-                result
+        return try {
+            val result = openInputStream(ctx, fileUri, fileType).use { inputStream ->
+                reader(inputStream)
             }
-            catch (e: Exception) {
-                showToast(
-                    ctx,
-                    ctx.getString(R.string.import_error) + " " + e.message
-                )
-                Log.e("Error import", Log.getStackTraceString(e))
-                null
-//            }
+            showToast(ctx, "Import ${fileType.name}")
+            result
+        }
+        catch (e: Exception) {
+            showToast(
+                ctx,
+                ctx.getString(R.string.import_error) + " " + e.message
+            )
+            Log.e("Error import", Log.getStackTraceString(e))
+            null
         }
     }
 
