@@ -176,10 +176,6 @@ class TaskDaoInstrumentedTest {
         assertEquals("file.csv", result.attachments.first().filename)
     }
 
-
-
-
-
     private fun testTaskEntity(
         title: String = "Test task",
         deadline: LocalDateTime = LocalDateTime.now().plusDays(3),

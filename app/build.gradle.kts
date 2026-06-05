@@ -1,12 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.ksp)
-//    id("com.google.devtools.ksp")
-//    alias(libs.plugins.kotlin.compose)
-//    alias(libs.plugins.kotlin.android)
-//    id("com.android.application")
-//    id("org.jetbrains.kotlin.android")
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.ksp)
 }
 
 android {
@@ -67,6 +62,7 @@ dependencies {
     implementation(libs.simple.xml)
 
     testImplementation(libs.junit)
+    testImplementation(libs.mockito.kotlin)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(libs.androidx.junit)
 
