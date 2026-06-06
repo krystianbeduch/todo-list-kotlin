@@ -36,6 +36,7 @@ import java.time.LocalTime
 
 class MainActivity : AppCompatActivity() {
 
+    private val enableDummyTasks = false
     private lateinit var binding: ActivityMainBinding
     private var currentImportFileType: FileType? = null
     private val taskViewModel: TaskViewModel by viewModels {
@@ -94,7 +95,9 @@ class MainActivity : AppCompatActivity() {
         NavigationUI.setupWithNavController(navView, navController)
 
         // SAMPLE DATA
-        seedDummyTasksIfNeeded()
+        if (enableDummyTasks) {
+            seedDummyTasksIfNeeded()
+        }
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {

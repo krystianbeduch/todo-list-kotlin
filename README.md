@@ -216,6 +216,17 @@ git clone https://github.com/krystianbeduch/todo-list-kotlin.git
 - Ensure you have a connected __emulator__ or __physical Android device__ with __debugging enabled__
 - Press __Run__ (`Shift + F10` or the green button <img src="https://github.com/krystianbeduch/todo-list-kotlin/blob/main/readme-images/green-play-button.png" alt="Green button" title="Green button" height="20">) to launch the app
 
+### 5. Optional sample data
+### 5. Optional sample data
+> [!CAUTION]
+> The `enableDummyTasks` flag in [`MainActivity`](./app/src/main/java/com/krybed/todolist/presentation/activity/MainActivity.kt) controls whether sample tasks are loaded on startup.
+> 
+> ```kotlin
+> private val enableDummyTasks = false
+> ```
+> 
+> Set it to `true` only when you want to quickly test the app with preloaded data. By default, it is disabled.
+
 ## Functional description
 ### List of tasks
 Presents all tasks in a scrollable list using a _RecyclerView_. Each task is visually styled according to the `item_task.xml` layout, ensuring a consistent and user-friendly appearance. 
