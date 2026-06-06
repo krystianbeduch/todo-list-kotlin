@@ -224,7 +224,7 @@ git clone https://github.com/krystianbeduch/todo-list-kotlin.git
 > private val enableDummyTasks = false
 > ```
 > 
-> Set it to `true` only when you want to quickly test the app with preloaded data. By default, it is disabled.
+> If you change its value to `true`, the application will load sample tasks during startup. This is useful for quickly testing the UI and basic task management features without manually creating data. By default, the flag is disabled.
 
 ## Functional description
 ### List of tasks
