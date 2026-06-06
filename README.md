@@ -16,6 +16,15 @@ The application is a task planner designed to help users organize everyday activ
    - [Notification mechanism](#notification-mechanism)
    - [Import and export of task list to files](#import-and-export-of-task-list-to-files)
    - [Changing the application language](#changing-the-application-language)
+7. [Technical documentation](#technical-documentation)
+    - [List of tasks](#list-of-tasks)
+    - [Add new task](#add-new-task)
+    - [Managing tasks](#managing-tasks)
+    - [Edit task](#edit-task)
+    - [Managing attachments](#managing-attachments)
+    - [Notification mechanism](#notification-mechanism)
+    - [Import and export of task list to files](#import-and-export-of-task-list-to-files)
+    - [Changing the application language](#changing-the-application-language)
 
 ## Application functionality
 - Displays all saved tasks in a clear list, allowing easy browsing and quick access to task details
@@ -362,3 +371,56 @@ The application allow users to switch between available languages: Polish and En
    <img src="https://github.com/krystianbeduch/todo-list-kotlin/blob/main/readme-images/changing-app-language-to-turkish.jpg" alt="Changing app language to Turkish" title="Changing app language to Turkish" height="800">
    <img src="https://github.com/krystianbeduch/todo-list-kotlin/blob/main/readme-images/changing-app-language-to-arabic.jpg" alt="Changing app language to Arabic" title="Changing app language to Arabic" height="800">
 </p>
+
+## Technical documentation
+This section describes the key Kotlin and Android solutions used in the project. The goal is to present not only the final functionality of the application, but also the programming techniques, architectural decisions, and language features applied during implementation.
+
+### Architectural overview
+The application follows the MVVM architectural pattern, which separates the user interface from the business logic and data handling layers. UI components such as activities and fragments are responsible only for displaying data and reacting to user actions, while the `ViewModel` classes expose screen state and coordinate data operations.
+
+The project is organized into clearly separated packages: `presentation`, `domain`, `data`, and `util`. This structure improves code readability, makes the project easier to maintain, and reduces coupling between the UI, database, and utility logic.
+
+### Data modeling in Kotlin
+The main application models, such as [`Task`](./app/src/main/java/com/krybed/todolist/domain/model/Task.kt), [`Attachment`](./app/src/main/java/com/krybed/todolist/domain/model/Attachment.kt), [`TaskEntity`](./app/src/main/java/com/krybed/todolist/data/model/TaskEntity.kt), [`AttachmentEntity`](./app/src/main/java/com/krybed/todolist/data/model/AttachmentEntity.kt), and [`TaskWithAttachments`](./app/src/main/java/com/krybed/todolist/data/model/TaskWithAttachments.kt), are implemented as Kotlin data classes. This approach is convenient because Kotlin automatically generates useful methods such as `equals()`, `hashCode()`, `toString()`, and `copy()`, which simplifies working with immutable data and comparing objects.
+
+Separate domain models and database entities are used intentionally. Domain classes represent the application logic, while entity classes are tailored to Room persistence. This makes the code cleaner and allows the database layer to evolve independently from the rest of the application.
+
+### Dependency creation and object management
+Dependency creation in the project is handled in a simple and explicit way, without introducing a full dependency injection framework. Shared objects are provided through classes such as [`AppContainer`](./app/src/main/java/com/krybed/todolist/presentation/AppContainer.kt), which acts as a manual dependency container and supplies repositories to the presentation layer. This keeps dependency wiring centralized and makes the structure of the application easier to understand.
+
+Several stateless helpers are implemented using Kotlin `object`, which is the idiomatic way to declare a singleton. Examples include [`LocalHelper`](./app/src/main/java/com/krybed/todolist/util/lang/LocalHelper.kt), [`NotificationUtils `](./app/src/main/java/com/krybed/todolist/util/notification/NotificationUtils.kt), and [`FileService`](./app/src/main/java/com/krybed/todolist/util/file/FileService.kt). Using object avoids the need for utility classes with static methods and provides a single shared instance with a compact syntax.
+
+The Factory pattern is used for creating `ViewModel` instances that require constructor parameters. [`TaskViewModelFactory`](./app/src/main/java/com/krybed/todolist/presentation/viewmodel/TaskViewModelFactory.kt) receives [`TaskRepository`](./app/src/main/java/com/krybed/todolist/domain/repository/TaskRepository.kt) and [`AttachmentRepository`](./app/src/main/java/com/krybed/todolist/domain/repository/AttachmentRepository.kt), and passes them to [`TaskViewModel`](./app/src/main/java/com/krybed/todolist/presentation/viewmodel/TaskViewModel.kt). This is necessary because a custom `ViewModel` with dependencies cannot be created using the default no-argument factory
+
+### Asynchronous data flow
+Asynchronous operations in the project are implemented using Kotlin coroutines, `Flow`, and `StateFlow`. This approach allows database queries, file operations, and background logic to run without blocking the main thread, which keeps the user interface responsive even during longer tasks such as importing data or updating records.
+
+A central example of this approach is [`TaskViewModel`](./app/src/main/java/com/krybed/todolist/presentation/viewmodel/TaskViewModel.kt) , where methods such as `insert()`, `update()`, `delete()`, `importTasksFromFile()`, and `exportTasksToFile()` launch asynchronous work in `viewModelScope`. The current list of tasks is exposed as a StateFlow, and additional state such as the selected sort type or notification-related data is also stored in flows. This makes the UI reactive, because every state change can be observed automatically by the screen layer.
+
+The task list is derived by combining the task stream from the repository with the currently selected sort type using `combine()`, and then converted into a lifecycle-aware `StateFlow` with `stateIn()`. On the UI side, flows are collected inside `repeatOnLifecycle()`, which ensures that updates are received only while the screen is in an active state. This reduces unnecessary work and prevents updates from being delivered to a stopped or destroyed activity or fragment.
+
+### Persistence layer
+The persistence layer is based on Room and provides local storage for tasks and attachments. Database access is defined through [`TaskDao`](./app/src/main/java/com/krybed/todolist/data/dao/TaskDao.kt) and [`AttachmentDao`](./app/src/main/java/com/krybed/todolist/data/dao/AttachmentDao.kt), while [`AppDatabase`](./app/src/main/java/com/krybed/todolist/data/db/AppDatabase.kt) serves as the main database entry point. This setup makes the data layer structured and consistent with standard Android persistence practices.
+
+The repository layer acts as an abstraction between Room and the rest of the application. [`TaskRepositoryImpl`](./app/src/main/java/com/krybed/todolist/data/repository/TaskRepositoryImpl.kt) and [`AttachmentRepositoryImpl`](./app/src/main/java/com/krybed/todolist/data/repository/AttachmentRepositoryImpl.kt) implement the contracts defined in the domain layer and encapsulate direct database access. Thanks to this, the ViewModel interacts with repositories rather than DAOs, which keeps UI logic independent from persistence details.
+
+Room relations are used to represent connected data, for example through [`TaskWithAttachments`](./app/src/main/java/com/krybed/todolist/data/model/TaskWithAttachments.kt). The conversion between persistence models and domain models is handled by dedicated mapper functions, which keeps Room-specific details out of the business logic and UI layers. In this project, mapping is implemented in [`TaskMapper`](./app/src/main/java/com/krybed/todolist/data/mapper/TaskMapper.kt) using Kotlin extension functions such as `TaskEntity.toDomain()`, `Task.toEntity()`, and `TaskWithAttachments.toDomain()`. This keeps the transformation logic centralized and makes repository code easier to read.
+
+### File handling and serialization
+The application supports export and import of task lists in CSV, JSON, and XML formats. This functionality is implemented in the [`FileService`](./app/src/main/java/com/krybed/todolist/util/file/FileService.kt) singleton, which provides dedicated methods for each file type and handles reading, writing, and validation of file contents. Keeping this logic in one place makes the file-related code easier to reuse and prevents serialization concerns from being mixed into the UI or repository layers.
+
+The project also uses separate helper classes for format-specific data processing, such as JSON and XML DTOs located in the `util/file/json` and `util/file/xml` packages. These classes make it possible to adapt the internal task model to external file structures without changing the core domain models. As a result, serialization remains isolated, explicit, and easier to maintain when supporting multiple formats.
+
+### Localization support
+Application localization is handled by the [`LocalHelper`](./app/src/main/java/com/krybed/todolist/util/lang/LocalHelper.kt) singleton, which centralizes all language-related operations in one place. This object is responsible for storing the selected language, applying it to the application context, and refreshing the UI after a language change. The helper uses `SharedPreferences` to persist the selected language code under a dedicated key, which allows the app to restore the user’s language preference after restart. The `setLocale()` method creates a new `Configuration` based on the selected locale, updates the layout direction, and returns a localized context using `createConfigurationContext()`.
+
+Previously selected language settings are restored through `applySavedLocale()`, which reads the saved value from preferences and reapplies it when a new activity context is attached. This makes it possible to keep the selected language consistent across screens and app launches. The language selection UI is provided by `showChangeLanguageDialog()`, which displays an `AlertDialog` with the list of supported languages and their language tags. After the user chooses a language, `changeLanguage()` applies the new locale and recreates the current activity so that all visible resources, such as strings and layout direction, are reloaded immediately.
+
+### Testing approach
+The project includes both local unit tests and Android instrumented tests. Unit tests run directly on the JVM and are used to verify business logic in isolation, without depending on the Android runtime. Instrumented tests run on an Android device or emulator and are used to validate Android-specific components, such as Room database operations.
+
+A good example of a local unit test is [`AttachmentMapperTest`](./app/src/test/java/com/krybed/todolist/data/mapper/AttachmentMapperTest.kt), which verifies the mapping logic between [`AttachmentEntity`](./app/src/main/java/com/krybed/todolist/data/model/AttachmentEntity.kt) and [`Attachment`](./app/src/main/java/com/krybed/todolist/domain/model/Attachment.kt). This type of test is useful for checking that transformation functions return correct values and preserve the expected fields in both directions.
+
+An instrumented test is [`TaskDaoInstrumentedTest`](./app/src/androidTest/java/com/krybed/todolist/TaskDaoInstrumentedTest.kt), which tests Room DAO operations against an in-memory database. This test class verifies common database scenarios such as inserting, updating, deleting, filtering, and loading tasks with attachments. It also checks whether the data returned by DAO queries is ordered and mapped correctly.
+
+JUnit is used as the main testing framework, Mockito is used for mocking dependencies where needed, and `runTest` from `kotlinx.coroutines.test` is used to test coroutine-based code in a controlled and deterministic way. This combination makes it possible to verify asynchronous logic without relying on real delays or background threads.
