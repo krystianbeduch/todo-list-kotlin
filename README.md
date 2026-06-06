@@ -196,7 +196,7 @@ The `res` folder contains all app resources organized into subdirectories by typ
 - Option 1: Download the ZIP file from github and extract it
 - Option 2: Clone the repository:
 ```bash
-git clone https://github.com/krystianbeduch/todo-list.git
+git clone https://github.com/krystianbeduch/todo-list-kotlin.git
 ```
 
 ### 3. Open the project in Android Studio
@@ -213,7 +213,7 @@ Presents all tasks in a scrollable list using a _RecyclerView_. Each task is vis
 Each task item displays the following information:
 - Title — the main name or description of the task
 - Deadline — the due date and time by which the task should be completed
-- Creation date — the date and time when the task was originally added
+- Addition date — the date and time when the task was originally added
 - Priority — indicates the importance level of the task, which can be _High_, _Medium_, or _Low_
 - Completion status — represented by a ✔ symbol when the task is marked as completed
 - Attachment icon — displayed if one or more attachments are associated with the task, indicating additional files or resources linked to it
@@ -249,7 +249,7 @@ The application provides a flexible and intuitive interface for managing tasks.
    - [Managing attachments](#managing-attachments)
 - Quick Status Change - long-pressing a task directly toggles its completion status (✔)
 - Task Sorting - tasks can be sorted dynamically by the user using a _spinner_ menu located in the toolbar. The available sorting options include:
-   - Creation Date (default)
+   - Addition date (default)
    - Title
    - Deadline
    - Priority
@@ -349,7 +349,7 @@ ID;Title;Deadline;Priority;Status;Created at
 </Tasks>
 ```
 <p align="center">
-   <img src="https://github.com/krystianbeduch/todo-list/blob/main/readme-images/import-tasks.jpg" alt="Import tasks" title="Import tasks" height="800">
+   <img src="https://github.com/krystianbeduch/todo-list-kotlin/blob/main/readme-images/import-tasks.jpg" alt="Import tasks" title="Import tasks" height="800">
 </p>
 
 ### Changing the application language
@@ -359,5 +359,6 @@ The application allow users to switch between available languages: Polish and En
 <p align="center">
    <img src="https://github.com/krystianbeduch/todo-list-kotlin/blob/main/readme-images/changing-app-language-to-polish.jpg" alt="Changing app language to Polish" title="Changing app language to Polish" height="800">
    <img src="https://github.com/krystianbeduch/todo-list-kotlin/blob/main/readme-images/changing-app-language-to-spanish.jpg" alt="Changing app language to Spanish" title="Changing app language to Spanish" height="800">
+   <img src="https://github.com/krystianbeduch/todo-list-kotlin/blob/main/readme-images/changing-app-language-to-turkish.jpg" alt="Changing app language to Turkish" title="Changing app language to Turkish" height="800">
    <img src="https://github.com/krystianbeduch/todo-list-kotlin/blob/main/readme-images/changing-app-language-to-arabic.jpg" alt="Changing app language to Arabic" title="Changing app language to Arabic" height="800">
 </p>
