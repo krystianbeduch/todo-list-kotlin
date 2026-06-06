@@ -11,7 +11,7 @@
     <string name="lang_arabic" translatable="false">العربية</string>
 
     <!-- UI -->
-    <string name="app_name" translatable="false">To-Do Lis Kt</string>
+    <string name="app_name" translatable="false">To-Do List Kt</string>
     <string name="title_home">Home</string>
     <string name="title_add_task">Add task</string>
     <string name="title_notifications">Notification</string>

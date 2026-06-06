@@ -79,13 +79,6 @@ class TaskActivity : AppCompatActivity() {
                     binding.taskTitle.setText(task.title)
                     binding.taskDeadline.setText(Converters.fromLocalDateTimeToString(task.deadline))
                     binding.taskPriority.setSelection(task.priority.value)
-//                    binding.taskSaveButton.setOnClickListener { v ->
-//                        helper.handleSave(
-//                            callback = { finish() },
-//                            isEditMode = true,
-//                            existingTask = taskToEdit
-//                        )
-//                    }
                 }
             }
         }

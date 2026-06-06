@@ -1,7 +1,6 @@
 package com.krybed.todolist.util.file.json
 
 import com.krybed.todolist.data.model.enums.Priority
-import com.krybed.todolist.domain.model.Task
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 import java.time.LocalDateTime

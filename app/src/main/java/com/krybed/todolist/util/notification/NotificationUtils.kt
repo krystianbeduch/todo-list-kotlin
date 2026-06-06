@@ -46,7 +46,7 @@ object NotificationUtils {
             .setSmallIcon(R.drawable.ic_notifications_black_24dp)
             .setContentTitle(task.notificationType.getTextToNotification(ctx))
             .setContentText(
-                "${task.title} : ${Converters.formatLocalDateTimeToStringWithDayName(ctx, task.deadline)}"
+                "${task.title}: \n${Converters.formatLocalDateTimeToStringWithDayName(ctx, task.deadline)}"
             )
             .setPriority(NotificationCompat.PRIORITY_HIGH)
             .setAutoCancel(true)
