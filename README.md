@@ -17,14 +17,14 @@ The application is a task planner designed to help users organize everyday activ
    - [Import and export of task list to files](#import-and-export-of-task-list-to-files)
    - [Changing the application language](#changing-the-application-language)
 7. [Technical documentation](#technical-documentation)
-    - [List of tasks](#list-of-tasks)
-    - [Add new task](#add-new-task)
-    - [Managing tasks](#managing-tasks)
-    - [Edit task](#edit-task)
-    - [Managing attachments](#managing-attachments)
-    - [Notification mechanism](#notification-mechanism)
-    - [Import and export of task list to files](#import-and-export-of-task-list-to-files)
-    - [Changing the application language](#changing-the-application-language)
+    - [Architectural overview](#architectural-overview)
+    - [Data modeling in Kotlin](#data-modeling-in-kotlin)
+    - [Dependency creation and object management](#dependency-creation-and-object-management)
+    - [Asynchronous data flow](#asynchronous-data-flow)
+    - [Persistence layer](#persistence-layer)
+    - [File handling and serialization](#file-handling-and-serialization)
+    - [Localization support](#localization-support)
+    - [Testing approach](#testing-approach)
 
 ## Application functionality
 - Displays all saved tasks in a clear list, allowing easy browsing and quick access to task details
