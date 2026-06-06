@@ -1,0 +1,100 @@
+<resources>
+    <!-- UI -->
+    <string name="title_home">الرئيسية</string>
+    <string name="title_add_task">إضافة مهمة</string>
+    <string name="title_notifications">الإشعارات</string>
+
+    <string name="change_status">تغيير الحالة</string>
+    <string name="delete_task">حذف</string>
+    <string name="edit_task">تعديل</string>
+
+    <string name="task_form_header_text">إضافة مهمة جديدة</string>
+    <string name="task_title_hint">عنوان المهمة</string>
+    <string name="task_deadline_hint">الموعد النهائي</string>
+    <string name="task_priority_label_text">اختر الأولوية:</string>
+
+    <string name="save_task_button_text">حفظ المهمة</string>
+    <string name="add_attachment">إضافة مرفق</string>
+    <string name="delete_attachment">حذف المرفق</string>
+    <string name="show_attachment">عرض المرفق</string>
+    <string name="attachment_icon">أيقونة المرفق</string>
+    <string name="nav_more_text">المزيد</string>
+    <string name="menu_import_tasks">استيراد المهام</string>
+    <string name="menu_export_tasks">تصدير المهام</string>
+    <string name="menu_change_lang">تغيير اللغة</string>
+    <string name="menu_delete_all">حذف الكل</string>
+    <string name="menu_item_lang">اللغة</string>
+    <string name="menu_item_sort">ترتيب</string>
+
+    <!-- Code -->
+    <!-- MainActivity -->
+    <string name="incorrect_file_format">تنسيق الملف غير صحيح</string>
+    <string name="select_file_format">اختر تنسيق الملف:</string>
+    <string name="select_file">اختر الملف: %1$s</string>
+    <string name="select_lang">اختر اللغة:</string>
+    <string name="delete_all_title">حذف جميع المهام</string>
+    <string name="delete_all_message">هل أنت متأكد أنك تريد حذف جميع المهام؟</string>
+
+    <!-- EditActivity -->
+    <string name="error_no_task_id">خطأ: لا يوجد معرف للمهمة</string>
+    <string name="edit_task_header">تعديل المهمة</string>
+    <string name="no_task_found">لم يتم العثور على المهمة</string>
+
+    <!-- NotificationType -->
+    <string name="text_notification_upcoming">الموعد النهائي للمهمة يقترب</string>
+    <string name="text_notification_overdue">انتهى الموعد النهائي للمهمة</string>
+
+    <!-- Priority -->
+    <string name="high_priority">عالية</string>
+    <string name="medium_priority">متوسطة</string>
+    <string name="low_priority">منخفضة</string>
+
+    <!-- SortType -->
+    <string name="sort_created_at">تاريخ الإنشاء</string>
+    <string name="sort_title">العنوان</string>
+    <string name="sort_deadline">الموعد النهائي</string>
+    <string name="sort_priority">الأولوية</string>
+    <string name="sort_status">الحالة</string>
+
+    <!-- TaskAdapter -->
+    <string name="deadline_prefix">الموعد النهائي: %1$s</string>
+
+    <!-- HomeFragment -->
+    <string name="confirm_delete_title">تأكيد الحذف</string>
+    <string name="confirm_delete_task_message">هل أنت متأكد أنك تريد حذف المهمة</string>
+    <string name="yes">نعم</string>
+    <string name="no">لا</string>
+    <string name="no_attachments_toast">لا توجد مرفقات</string>
+    <string name="delete_attachment_alertdialog_title">حذف المرفق</string>
+    <string name="delete_attachment_alertdialog_message">هل أنت متأكد أنك تريد حذف المرفق المحدد؟</string>
+    <string name="cancel">إلغاء</string>
+    <string name="select_attachment">اختر مرفقاً</string>
+    <string name="attachment_added">تمت إضافة المرفق</string>
+    <string name="no_app_to_open_file">لا يوجد تطبيق لفتح الملف</string>
+    <string name="attachment_deleted">تم حذف المرفق</string>
+    <string name="error_deleting_attachment">حدث خطأ أثناء حذف المرفق</string>
+
+    <!-- BaseTaskAdapter -->
+    <string name="created_prefix">تم الإنشاء: %1$s</string>
+    <string name="priority_prefix">الأولوية: %1$s</string>
+
+    <!-- TaskFormHelper -->
+    <string name="complete_all_fields">يرجى إكمال جميع الحقول</string>
+    <string name="incorrect_date_format">تنسيق التاريخ غير صحيح. استخدم: dd.MM.yyyy HH:mm</string>
+    <string name="incorrect_date">يجب أن يكون التاريخ في المستقبل</string>
+    <string name="task_updated">تم تحديث المهمة</string>
+    <string name="task_added">تمت إضافة المهمة</string>
+
+    <!-- FileService -->
+    <string name="csv_header">ID;العنوان;الموعد النهائي;الأولوية;الحالة;تاريخ الإنشاء</string>
+    <string name="error_export_csv">خطأ في تصدير CSV</string>
+    <string name="error_import_csv">خطأ في استيراد CSV</string>
+    <string name="error_export_json">خطأ في تصدير JSON</string>
+    <string name="error_import_json">خطأ في استيراد JSON</string>
+    <string name="error_export_xml">خطأ في تصدير XML</string>
+    <string name="error_import_xml">خطأ في استيراد XML</string>
+    <string name="exported">تم التصدير</string>
+    <string name="export_error">خطأ في التصدير</string>
+    <string name="import_error">خطأ في الاستيراد</string>
+    <string name="is_cannot_reconstructed">لا يمكن إعادة إنشاء InputStream من URI</string>
+</resources>

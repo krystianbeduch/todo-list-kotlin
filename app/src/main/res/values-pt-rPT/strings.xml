@@ -1,0 +1,100 @@
+<resources>
+    <!-- UI -->
+    <string name="title_home">Início</string>
+    <string name="title_add_task">Adicionar tarefa</string>
+    <string name="title_notifications">Notificações</string>
+
+    <string name="change_status">Alterar estado</string>
+    <string name="delete_task">Eliminar</string>
+    <string name="edit_task">Editar</string>
+
+    <string name="task_form_header_text">Adicionar nova tarefa</string>
+    <string name="task_title_hint">Título da tarefa</string>
+    <string name="task_deadline_hint">Prazo</string>
+    <string name="task_priority_label_text">Escolhe a prioridade:</string>
+
+    <string name="save_task_button_text">Guardar tarefa</string>
+    <string name="add_attachment">Adicionar anexo</string>
+    <string name="delete_attachment">Eliminar anexo</string>
+    <string name="show_attachment">Mostrar anexo</string>
+    <string name="attachment_icon">Ícone do anexo</string>
+    <string name="nav_more_text">Mais</string>
+    <string name="menu_import_tasks">Importar tarefas</string>
+    <string name="menu_export_tasks">Exportar tarefas</string>
+    <string name="menu_change_lang">Alterar idioma</string>
+    <string name="menu_delete_all">Eliminar tudo</string>
+    <string name="menu_item_lang">Idioma</string>
+    <string name="menu_item_sort">Ordenar</string>
+
+    <!-- Code -->
+    <!-- MainActivity -->
+    <string name="incorrect_file_format">Formato de ficheiro incorreto</string>
+    <string name="select_file_format">Seleciona o formato do ficheiro:</string>
+    <string name="select_file">Seleciona o ficheiro: %1$s</string>
+    <string name="select_lang">Seleciona o idioma:</string>
+    <string name="delete_all_title">Eliminar todas as tarefas</string>
+    <string name="delete_all_message">Tens a certeza de que queres eliminar todas as tarefas?</string>
+
+    <!-- EditActivity -->
+    <string name="error_no_task_id">Erro: falta o ID da tarefa</string>
+    <string name="edit_task_header">Editar tarefa</string>
+    <string name="no_task_found">Tarefa não encontrada</string>
+
+    <!-- NotificationType -->
+    <string name="text_notification_upcoming">Prazo da tarefa a aproximar-se</string>
+    <string name="text_notification_overdue">O prazo da tarefa expirou</string>
+
+    <!-- Priority -->
+    <string name="high_priority">Alta</string>
+    <string name="medium_priority">Média</string>
+    <string name="low_priority">Baixa</string>
+
+    <!-- SortType -->
+    <string name="sort_created_at">Data de criação</string>
+    <string name="sort_title">Título</string>
+    <string name="sort_deadline">Prazo</string>
+    <string name="sort_priority">Prioridade</string>
+    <string name="sort_status">Estado</string>
+
+    <!-- TaskAdapter -->
+    <string name="deadline_prefix">Prazo: %1$s</string>
+
+    <!-- HomeFragment -->
+    <string name="confirm_delete_title">Confirmação de eliminação</string>
+    <string name="confirm_delete_task_message">Tens a certeza de que queres eliminar a tarefa</string>
+    <string name="yes">Sim</string>
+    <string name="no">Não</string>
+    <string name="no_attachments_toast">Sem anexos</string>
+    <string name="delete_attachment_alertdialog_title">Eliminar anexo</string>
+    <string name="delete_attachment_alertdialog_message">Tens a certeza de que queres eliminar o anexo selecionado?</string>
+    <string name="cancel">Cancelar</string>
+    <string name="select_attachment">Selecionar anexo</string>
+    <string name="attachment_added">Anexo adicionado</string>
+    <string name="no_app_to_open_file">Não existe nenhuma aplicação para abrir o ficheiro</string>
+    <string name="attachment_deleted">Anexo eliminado</string>
+    <string name="error_deleting_attachment">Erro ao eliminar o anexo</string>
+
+    <!-- BaseTaskAdapter -->
+    <string name="created_prefix">Criado em: %1$s</string>
+    <string name="priority_prefix">Prioridade: %1$s</string>
+
+    <!-- TaskFormHelper -->
+    <string name="complete_all_fields">Preenche todos os campos</string>
+    <string name="incorrect_date_format">Formato de data incorreto. Usa: dd.MM.yyyy HH:mm</string>
+    <string name="incorrect_date">A data tem de ser no futuro</string>
+    <string name="task_updated">Tarefa atualizada</string>
+    <string name="task_added">Tarefa adicionada</string>
+
+    <!-- FileService -->
+    <string name="csv_header">ID;Título;Prazo;Prioridade;Estado;Data de criação</string>
+    <string name="error_export_csv">Erro ao exportar CSV</string>
+    <string name="error_import_csv">Erro ao importar CSV</string>
+    <string name="error_export_json">Erro ao exportar JSON</string>
+    <string name="error_import_json">Erro ao importar JSON</string>
+    <string name="error_export_xml">Erro ao exportar XML</string>
+    <string name="error_import_xml">Erro ao importar XML</string>
+    <string name="exported">Exportado</string>
+    <string name="export_error">Erro de exportação</string>
+    <string name="import_error">Erro de importação</string>
+    <string name="is_cannot_reconstructed">Não é possível reconstruir o InputStream a partir do URI</string>
+</resources>

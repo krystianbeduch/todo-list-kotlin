@@ -1,0 +1,100 @@
+<resources>
+    <!-- UI -->
+    <string name="title_home">Startseite</string>
+    <string name="title_add_task">Aufgabe hinzufügen</string>
+    <string name="title_notifications">Benachrichtigungen</string>
+
+    <string name="change_status">Status ändern</string>
+    <string name="delete_task">Löschen</string>
+    <string name="edit_task">Bearbeiten</string>
+
+    <string name="task_form_header_text">Neue Aufgabe hinzufügen</string>
+    <string name="task_title_hint">Aufgabentitel</string>
+    <string name="task_deadline_hint">Fälligkeitsdatum</string>
+    <string name="task_priority_label_text">Priorität wählen:</string>
+
+    <string name="save_task_button_text">Aufgabe speichern</string>
+    <string name="add_attachment">Anhang hinzufügen</string>
+    <string name="delete_attachment">Anhang löschen</string>
+    <string name="show_attachment">Anhang anzeigen</string>
+    <string name="attachment_icon">Anhangssymbol</string>
+    <string name="nav_more_text">Mehr</string>
+    <string name="menu_import_tasks">Aufgaben importieren</string>
+    <string name="menu_export_tasks">Aufgaben exportieren</string>
+    <string name="menu_change_lang">Sprache ändern</string>
+    <string name="menu_delete_all">Alles löschen</string>
+    <string name="menu_item_lang">Sprache</string>
+    <string name="menu_item_sort">Sortieren</string>
+
+    <!-- Code -->
+    <!-- MainActivity -->
+    <string name="incorrect_file_format">Ungültiges Dateiformat</string>
+    <string name="select_file_format">Dateiformat auswählen:</string>
+    <string name="select_file">Datei auswählen: %1$s</string>
+    <string name="select_lang">Sprache auswählen:</string>
+    <string name="delete_all_title">Alle Aufgaben löschen</string>
+    <string name="delete_all_message">Möchtest du wirklich alle Aufgaben löschen?</string>
+
+    <!-- EditActivity -->
+    <string name="error_no_task_id">Fehler: keine Aufgaben-ID</string>
+    <string name="edit_task_header">Aufgabe bearbeiten</string>
+    <string name="no_task_found">Keine Aufgabe gefunden</string>
+
+    <!-- NotificationType -->
+    <string name="text_notification_upcoming">Bevorstehender Aufgabentermin</string>
+    <string name="text_notification_overdue">Fälligkeit der Aufgabe ist überschritten</string>
+
+    <!-- Priority -->
+    <string name="high_priority">Hoch</string>
+    <string name="medium_priority">Mittel</string>
+    <string name="low_priority">Niedrig</string>
+
+    <!-- SortType -->
+    <string name="sort_created_at">Erstellungsdatum</string>
+    <string name="sort_title">Titel</string>
+    <string name="sort_deadline">Fälligkeitsdatum</string>
+    <string name="sort_priority">Priorität</string>
+    <string name="sort_status">Status</string>
+
+    <!-- TaskAdapter -->
+    <string name="deadline_prefix">Fälligkeitsdatum: %1$s</string>
+
+    <!-- HomeFragment -->
+    <string name="confirm_delete_title">Löschen bestätigen</string>
+    <string name="confirm_delete_task_message">Möchtest du diese Aufgabe wirklich löschen</string>
+    <string name="yes">Ja</string>
+    <string name="no">Nein</string>
+    <string name="no_attachments_toast">Keine Anhänge</string>
+    <string name="delete_attachment_alertdialog_title">Anhang löschen</string>
+    <string name="delete_attachment_alertdialog_message">Möchtest du den ausgewählten Anhang wirklich löschen?</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="select_attachment">Anhang auswählen</string>
+    <string name="attachment_added">Anhang hinzugefügt</string>
+    <string name="no_app_to_open_file">Keine App zum Öffnen der Datei vorhanden</string>
+    <string name="attachment_deleted">Anhang gelöscht</string>
+    <string name="error_deleting_attachment">Fehler beim Löschen des Anhangs</string>
+
+    <!-- BaseTaskAdapter -->
+    <string name="created_prefix">Erstellt am: %1$s</string>
+    <string name="priority_prefix">Priorität: %1$s</string>
+
+    <!-- TaskFormHelper -->
+    <string name="complete_all_fields">Bitte alle Felder ausfüllen</string>
+    <string name="incorrect_date_format">Ungültiges Datumsformat. Verwende: dd.MM.yyyy HH:mm</string>
+    <string name="incorrect_date">Das Datum muss in der Zukunft liegen</string>
+    <string name="task_updated">Aufgabe aktualisiert</string>
+    <string name="task_added">Aufgabe hinzugefügt</string>
+
+    <!-- FileService -->
+    <string name="csv_header">ID;Titel;Fälligkeitsdatum;Priorität;Status;Erstellt am</string>
+    <string name="error_export_csv">Fehler beim CSV-Export</string>
+    <string name="error_import_csv">Fehler beim CSV-Import</string>
+    <string name="error_export_json">Fehler beim JSON-Export</string>
+    <string name="error_import_json">Fehler beim JSON-Import</string>
+    <string name="error_export_xml">Fehler beim XML-Export</string>
+    <string name="error_import_xml">Fehler beim XML-Import</string>
+    <string name="exported">Exportiert</string>
+    <string name="export_error">Exportfehler</string>
+    <string name="import_error">Importfehler</string>
+    <string name="is_cannot_reconstructed">InputStream kann nicht aus der URI rekonstruiert werden</string>
+</resources>

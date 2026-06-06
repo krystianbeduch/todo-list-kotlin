@@ -35,7 +35,6 @@ class NotificationsFragment : Fragment() {
             false
         )
         notificationAdapter = NotificationAdapter(
-//            requireContext(),
             emptyList()
         )
         b.tasksRecyclerView.setLayoutManager(LinearLayoutManager(context))

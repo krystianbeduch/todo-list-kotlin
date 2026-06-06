@@ -1,0 +1,100 @@
+<resources>
+    <!-- UI -->
+    <string name="title_home">Home</string>
+    <string name="title_add_task">Aggiungi attività</string>
+    <string name="title_notifications">Notifiche</string>
+
+    <string name="change_status">Cambia stato</string>
+    <string name="delete_task">Elimina</string>
+    <string name="edit_task">Modifica</string>
+
+    <string name="task_form_header_text">Aggiungi nuova attività</string>
+    <string name="task_title_hint">Titolo attività</string>
+    <string name="task_deadline_hint">Scadenza</string>
+    <string name="task_priority_label_text">Scegli la priorità:</string>
+
+    <string name="save_task_button_text">Salva attività</string>
+    <string name="add_attachment">Aggiungi allegato</string>
+    <string name="delete_attachment">Elimina allegato</string>
+    <string name="show_attachment">Mostra allegato</string>
+    <string name="attachment_icon">Icona allegato</string>
+    <string name="nav_more_text">Altro</string>
+    <string name="menu_import_tasks">Importa attività</string>
+    <string name="menu_export_tasks">Esporta attività</string>
+    <string name="menu_change_lang">Cambia lingua</string>
+    <string name="menu_delete_all">Elimina tutto</string>
+    <string name="menu_item_lang">Lingua</string>
+    <string name="menu_item_sort">Ordina</string>
+
+    <!-- Code -->
+    <!-- MainActivity -->
+    <string name="incorrect_file_format">Formato file non corretto</string>
+    <string name="select_file_format">Seleziona il formato del file:</string>
+    <string name="select_file">Seleziona il file: %1$s</string>
+    <string name="select_lang">Seleziona la lingua:</string>
+    <string name="delete_all_title">Eliminazione di tutte le attività</string>
+    <string name="delete_all_message">Sei sicuro di voler eliminare tutte le attività?</string>
+
+    <!-- EditActivity -->
+    <string name="error_no_task_id">Errore: nessun ID attività</string>
+    <string name="edit_task_header">Modifica attività</string>
+    <string name="no_task_found">Nessuna attività trovata</string>
+
+    <!-- NotificationType -->
+    <string name="text_notification_upcoming">Scadenza dell’attività in arrivo</string>
+    <string name="text_notification_overdue">La scadenza dell’attività è passata</string>
+
+    <!-- Priority -->
+    <string name="high_priority">Alta</string>
+    <string name="medium_priority">Media</string>
+    <string name="low_priority">Bassa</string>
+
+    <!-- SortType -->
+    <string name="sort_created_at">Data di creazione</string>
+    <string name="sort_title">Titolo</string>
+    <string name="sort_deadline">Scadenza</string>
+    <string name="sort_priority">Priorità</string>
+    <string name="sort_status">Stato</string>
+
+    <!-- TaskAdapter -->
+    <string name="deadline_prefix">Scadenza: %1$s</string>
+
+    <!-- HomeFragment -->
+    <string name="confirm_delete_title">Conferma eliminazione</string>
+    <string name="confirm_delete_task_message">Sei sicuro di voler eliminare l’attività</string>
+    <string name="yes">Sì</string>
+    <string name="no">No</string>
+    <string name="no_attachments_toast">Nessun allegato</string>
+    <string name="delete_attachment_alertdialog_title">Elimina allegato</string>
+    <string name="delete_attachment_alertdialog_message">Sei sicuro di voler eliminare l’allegato selezionato?</string>
+    <string name="cancel">Annulla</string>
+    <string name="select_attachment">Seleziona allegato</string>
+    <string name="attachment_added">Allegato aggiunto</string>
+    <string name="no_app_to_open_file">Nessuna app per aprire il file</string>
+    <string name="attachment_deleted">Allegato eliminato</string>
+    <string name="error_deleting_attachment">Errore durante l’eliminazione dell’allegato</string>
+
+    <!-- BaseTaskAdapter -->
+    <string name="created_prefix">Creato il: %1$s</string>
+    <string name="priority_prefix">Priorità: %1$s</string>
+
+    <!-- TaskFormHelper -->
+    <string name="complete_all_fields">Compila tutti i campi</string>
+    <string name="incorrect_date_format">Formato data non corretto. Usa: dd.MM.yyyy HH:mm</string>
+    <string name="incorrect_date">La data deve essere futura</string>
+    <string name="task_updated">Attività aggiornata</string>
+    <string name="task_added">Attività aggiunta</string>
+
+    <!-- FileService -->
+    <string name="csv_header">ID;Titolo;Scadenza;Priorità;Stato;Data di creazione</string>
+    <string name="error_export_csv">Errore durante l’esportazione CSV</string>
+    <string name="error_import_csv">Errore durante l’importazione CSV</string>
+    <string name="error_export_json">Errore durante l’esportazione JSON</string>
+    <string name="error_import_json">Errore durante l’importazione JSON</string>
+    <string name="error_export_xml">Errore durante l’esportazione XML</string>
+    <string name="error_import_xml">Errore durante l’importazione XML</string>
+    <string name="exported">Esportato</string>
+    <string name="export_error">Errore di esportazione</string>
+    <string name="import_error">Errore di importazione</string>
+    <string name="is_cannot_reconstructed">Impossibile ricostruire InputStream dall’URI</string>
+</resources>

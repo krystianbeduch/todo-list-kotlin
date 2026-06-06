@@ -35,6 +35,7 @@ class TaskRepositoryImpl(
     override suspend fun changeStatus(taskId: Int, isDone: Boolean) =
         taskDao.changeStatus(taskId, isDone)
 
+    // File
     override suspend fun getAllOnce(): List<Task> =
         taskDao.getAllOnce().map { relation ->
             relation.toDomain()

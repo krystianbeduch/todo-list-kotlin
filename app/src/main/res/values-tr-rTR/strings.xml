@@ -1,0 +1,100 @@
+<resources>
+    <!-- UI -->
+    <string name="title_home">Ana sayfa</string>
+    <string name="title_add_task">Görev ekle</string>
+    <string name="title_notifications">Bildirimler</string>
+
+    <string name="change_status">Durumu değiştir</string>
+    <string name="delete_task">Sil</string>
+    <string name="edit_task">Düzenle</string>
+
+    <string name="task_form_header_text">Yeni görev ekle</string>
+    <string name="task_title_hint">Görev başlığı</string>
+    <string name="task_deadline_hint">Son tarih</string>
+    <string name="task_priority_label_text">Öncelik seç:</string>
+
+    <string name="save_task_button_text">Görevi kaydet</string>
+    <string name="add_attachment">Ek ekle</string>
+    <string name="delete_attachment">Eki sil</string>
+    <string name="show_attachment">Eki göster</string>
+    <string name="attachment_icon">Ek simgesi</string>
+    <string name="nav_more_text">Daha fazla</string>
+    <string name="menu_import_tasks">Görevleri içe aktar</string>
+    <string name="menu_export_tasks">Görevleri dışa aktar</string>
+    <string name="menu_change_lang">Dili değiştir</string>
+    <string name="menu_delete_all">Hepsini sil</string>
+    <string name="menu_item_lang">Dil</string>
+    <string name="menu_item_sort">Sırala</string>
+
+    <!-- Code -->
+    <!-- MainActivity -->
+    <string name="incorrect_file_format">Geçersiz dosya biçimi</string>
+    <string name="select_file_format">Dosya biçimini seç:</string>
+    <string name="select_file">Dosya seç: %1$s</string>
+    <string name="select_lang">Dil seç:</string>
+    <string name="delete_all_title">Tüm görevleri sil</string>
+    <string name="delete_all_message">Tüm görevleri silmek istediğinizden emin misiniz?</string>
+
+    <!-- EditActivity -->
+    <string name="error_no_task_id">Hata: görev kimliği yok</string>
+    <string name="edit_task_header">Görevi düzenle</string>
+    <string name="no_task_found">Görev bulunamadı</string>
+
+    <!-- NotificationType -->
+    <string name="text_notification_upcoming">Görev son tarihi yaklaşıyor</string>
+    <string name="text_notification_overdue">Görevin son tarihi geçti</string>
+
+    <!-- Priority -->
+    <string name="high_priority">Yüksek</string>
+    <string name="medium_priority">Orta</string>
+    <string name="low_priority">Düşük</string>
+
+    <!-- SortType -->
+    <string name="sort_created_at">Oluşturulma tarihi</string>
+    <string name="sort_title">Başlık</string>
+    <string name="sort_deadline">Son tarih</string>
+    <string name="sort_priority">Öncelik</string>
+    <string name="sort_status">Durum</string>
+
+    <!-- TaskAdapter -->
+    <string name="deadline_prefix">Son tarih: %1$s</string>
+
+    <!-- HomeFragment -->
+    <string name="confirm_delete_title">Silmeyi onayla</string>
+    <string name="confirm_delete_task_message">Bu görevi silmek istediğinizden emin misiniz</string>
+    <string name="yes">Evet</string>
+    <string name="no">Hayır</string>
+    <string name="no_attachments_toast">Ek yok</string>
+    <string name="delete_attachment_alertdialog_title">Eki sil</string>
+    <string name="delete_attachment_alertdialog_message">Seçilen eki silmek istediğinizden emin misiniz?</string>
+    <string name="cancel">İptal</string>
+    <string name="select_attachment">Ek seç</string>
+    <string name="attachment_added">Ek eklendi</string>
+    <string name="no_app_to_open_file">Dosyayı açacak uygulama yok</string>
+    <string name="attachment_deleted">Ek silindi</string>
+    <string name="error_deleting_attachment">Ek silinirken hata oluştu</string>
+
+    <!-- BaseTaskAdapter -->
+    <string name="created_prefix">Oluşturuldu: %1$s</string>
+    <string name="priority_prefix">Öncelik: %1$s</string>
+
+    <!-- TaskFormHelper -->
+    <string name="complete_all_fields">Tüm alanları doldurun</string>
+    <string name="incorrect_date_format">Geçersiz tarih biçimi. Şunu kullanın: dd.MM.yyyy HH:mm</string>
+    <string name="incorrect_date">Tarih gelecekte olmalıdır</string>
+    <string name="task_updated">Görev güncellendi</string>
+    <string name="task_added">Görev eklendi</string>
+
+    <!-- FileService -->
+    <string name="csv_header">ID;Başlık;Son tarih;Öncelik;Durum;Oluşturulma tarihi</string>
+    <string name="error_export_csv">CSV dışa aktarma hatası</string>
+    <string name="error_import_csv">CSV içe aktarma hatası</string>
+    <string name="error_export_json">JSON dışa aktarma hatası</string>
+    <string name="error_import_json">JSON içe aktarma hatası</string>
+    <string name="error_export_xml">XML dışa aktarma hatası</string>
+    <string name="error_import_xml">XML içe aktarma hatası</string>
+    <string name="exported">Dışa aktarıldı</string>
+    <string name="export_error">Dışa aktarma hatası</string>
+    <string name="import_error">İçe aktarma hatası</string>
+    <string name="is_cannot_reconstructed">InputStream URI\'den yeniden oluşturulamıyor</string>
+</resources>

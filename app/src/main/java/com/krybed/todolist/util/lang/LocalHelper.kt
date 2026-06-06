@@ -37,11 +37,23 @@ object LocalHelper {
     }
 
     fun showChangeLanguageDialog(ctx: Context) {
+        val languages = listOf(
+            ctx.getString(R.string.lang_english) to "en-GB",
+            ctx.getString(R.string.lang_polish) to "pl-PL",
+            ctx.getString(R.string.lang_german) to "de-DE",
+            ctx.getString(R.string.lang_spanish) to "es-ES",
+            ctx.getString(R.string.lang_french) to "fr-FR",
+            ctx.getString(R.string.lang_italian) to "it-IT",
+            ctx.getString(R.string.lang_portuguese) to "pt-PT",
+            ctx.getString(R.string.lang_turkish) to "tr-TR",
+            ctx.getString(R.string.lang_ukrainian) to "uk-UA",
+            ctx.getString(R.string.lang_arabic) to "ar-SA",
+        )
+
         AlertDialog.Builder(ctx)
             .setTitle(ctx.getString(R.string.select_lang))
-            .setItems(arrayOf("Polski", "English")) { _, which ->
-                val selectedLanguage = if (which == 0) "pl-PL" else "en-GB"
-                changeLanguage(ctx, selectedLanguage)
+            .setItems(languages.map { it.first }.toTypedArray()) { _, which ->
+                changeLanguage(ctx, languages[which].second)
             }
             .setNegativeButton(ctx.getString(R.string.cancel), null)
             .show()

@@ -13,7 +13,7 @@ import com.krybed.todolist.util.converter.Converters
 
 @Database(
     entities = [TaskEntity::class, AttachmentEntity::class],
-    version = 2,
+    version = 4,
     exportSchema = true
 )
 @TypeConverters(Converters::class)

@@ -16,26 +16,18 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.NavigationUI
 import com.krybed.todolist.R
-import com.krybed.todolist.data.db.AppDatabase
-import com.krybed.todolist.data.mapper.AttachmentMapper
-import com.krybed.todolist.data.mapper.TaskMapper
 import com.krybed.todolist.data.model.enums.FileType
 import com.krybed.todolist.data.model.enums.Priority
-import com.krybed.todolist.data.repository.AttachmentRepositoryImpl
-import com.krybed.todolist.data.repository.TaskRepositoryImpl
 import com.krybed.todolist.databinding.ActivityMainBinding
 import com.krybed.todolist.domain.model.Task
 import com.krybed.todolist.presentation.AppContainer
 import com.krybed.todolist.presentation.viewmodel.TaskViewModel
-import com.krybed.todolist.presentation.viewmodel.TaskViewModelFactory
 import com.krybed.todolist.util.file.FileService
 import com.krybed.todolist.util.lang.LocalHelper
 import kotlinx.coroutines.launch
@@ -107,15 +99,6 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
                 taskViewModel.tasksForNotification.collect { tasks ->
-//                    val badge = navView.getOrCreateBadge(R.id.navigation_notifications)
-//                    if (tasks.isNotEmpty()) {
-//                        badge.isVisible = true
-//                        badge.number = tasks.size
-//                    }
-//                    else {
-//                        badge.isVisible = false
-//                    }
-
                     navView.getOrCreateBadge(R.id.navigation_notifications).apply {
                         isVisible = tasks.isNotEmpty()
                         if (isVisible) number = tasks.size

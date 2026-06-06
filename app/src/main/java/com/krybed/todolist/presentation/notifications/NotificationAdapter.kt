@@ -1,6 +1,5 @@
 package com.krybed.todolist.presentation.notifications
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -8,13 +7,11 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.krybed.todolist.R
-import com.krybed.todolist.data.model.TaskEntity
 import com.krybed.todolist.domain.model.Task
 import com.krybed.todolist.util.converter.Converters
 import com.krybed.todolist.util.task.BaseTaskAdapter
 
 class NotificationAdapter(
-//    private val ctx: Context,
     tasks: List<Task>,
 ) : BaseTaskAdapter<NotificationAdapter.NotificationTaskViewHolder>(tasks) {
 

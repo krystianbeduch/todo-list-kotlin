@@ -49,6 +49,7 @@ class HomeFragment : Fragment() {
     private val b get() = binding!!
     private lateinit var taskAdapter: TaskAdapter
     private var currentAttachmentTask: Task? = null
+    private val shownNotificationKeys = mutableSetOf<String>()
     private val taskViewModel: TaskViewModel by activityViewModels {
         AppContainer.provideTaskViewModelFactory(requireContext().applicationContext)
     }
@@ -111,47 +112,11 @@ class HomeFragment : Fragment() {
     }
 
     private fun observeViewModel() {
-//        viewLifecycleOwner.lifecycleScope.launch {
-//            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-//
-//                launch {
-//                    taskViewModel.tasks.collect { tasks ->
-//                        taskAdapter.updateTasks(tasks)
-//
-//                        val checked = taskViewModel.notificationChecked.value
-//                        checkForUpcomingDeadlines(tasks, checked)
-//
-//                        if (!checked) {
-//                            taskViewModel.markNotificationChecked()
-//                        }
-//                    }
-//                }
-//
-//                launch {
-//                    taskViewModel.notificationChecked.collect { checked ->
-//                        val safeTasks = taskViewModel.tasks.value
-//                        checkForUpcomingDeadlines(safeTasks, checked)
-//
-//                        if (!checked) {
-//                            taskViewModel.markNotificationChecked()
-//                        }
-//                    }
-//                }
-//            }
-//        }
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 taskViewModel.tasks.collect { tasks ->
                     taskAdapter.updateTasks(tasks)
-
-//                    val checked = taskViewModel.notificationChecked.value
-                    checkForUpcomingDeadlines(tasks
-//                        , checked
-                    )
-
-//                    if (!checked) {
-//                        taskViewModel.markNotificationChecked()
-//                    }
+                    checkForUpcomingDeadlines(tasks)
                 }
             }
         }
@@ -199,8 +164,16 @@ class HomeFragment : Fragment() {
                 }
                 val langItem = menu.findItem(R.id.current_lang_flag)
                 when (Locale.getDefault().language) {
-                    "pl" -> langItem.setIcon(R.drawable.ic_polish)
                     "en" -> langItem.setIcon(R.drawable.ic_english)
+                    "pl" -> langItem.setIcon(R.drawable.ic_polish)
+                    "de" -> langItem.setIcon(R.drawable.ic_germany)
+                    "es" -> langItem.setIcon(R.drawable.ic_spain)
+                    "fr" -> langItem.setIcon(R.drawable.ic_france)
+                    "it" -> langItem.setIcon(R.drawable.ic_italy)
+                    "pt" -> langItem.setIcon(R.drawable.ic_portugal)
+                    "tr" -> langItem.setIcon(R.drawable.ic_turkey)
+                    "uk" -> langItem.setIcon(R.drawable.ic_ukraine)
+                    "ar" -> langItem.setIcon(R.drawable.ic_saudi_arabia)
                 }
             }
 
@@ -375,91 +348,37 @@ class HomeFragment : Fragment() {
         }
     }
 
-//    private fun checkForUpcomingDeadlines(
-//        tasks: List<Task>,
-//        isNotificationShown: Boolean
-//    ) {
-//        val now = LocalDateTime.now()
-//        val threshold = now.plusHours(24)
-//        val tasksToNotify = mutableListOf<Task>()
-//
-//        for (task in tasks) {
-//            if (!task.isDone) {
-//                val notificationType = when {
-//                    task.deadline.isBefore(now) -> NotificationType.OVERDUE
-//                    task.deadline.isAfter(now) && task.deadline.isBefore(threshold) ->
-//                        NotificationType.UPCOMING
-//                    else -> null
-//                }
-//
-//                if (notificationType != null) {
-//                    tasksToNotify.add(task.copy(notificationType = notificationType))
-//
-//                    if (!isNotificationShown) {
-//                        NotificationUtils.showTaskNotification(
-//                            requireContext(),
-//                            task.copy(notificationType = notificationType)
-//                        )
-//                    }
-//                }
-//            }
-//        }
-//        taskViewModel.updateTasksForNotification(tasksToNotify)
-//    }
-
     private fun checkForUpcomingDeadlines(
         tasks: List<Task>,
-//        isNotificationShown: Boolean
     ) {
         val now = LocalDateTime.now()
         val threshold = now.plusHours(24)
 
-        val tasksToNotify = tasks.mapNotNull { task ->
-            if (task.isDone) return@mapNotNull null
+        val tasksToNotify = mutableListOf<Task>()
+
+        tasks.forEach { task ->
+            if (task.isDone) return@forEach
 
             val notificationType = when {
                 task.deadline.isBefore(now) -> NotificationType.OVERDUE
                 task.deadline.isAfter(now) && task.deadline.isBefore(threshold) ->
                     NotificationType.UPCOMING
                 else -> null
-            }
+            } ?: return@forEach
 
-            notificationType?.let {
-                task.copy(notificationType = it)
-            }
+            val notifiedTask = task.copy(notificationType = notificationType)
+            tasksToNotify.add(notifiedTask)
+
+            val key = "${task.id}_${notificationType.name}"
+            if (!shownNotificationKeys.add(key)) return@forEach
+
+            NotificationUtils.showTaskNotification(
+                requireContext(),
+                task.copy(notificationType = notificationType)
+            )
         }
 
         taskViewModel.updateTasksForNotification(tasksToNotify)
-
-        tasksToNotify.forEach { task ->
-            NotificationUtils.showTaskNotification(requireContext(), task)
-        }
-
-
-//        val tasksToNotify = mutableListOf<Task>()
-//
-//        for (task in tasks) {
-//            if (!task.isDone) {
-//                val notificationType = when {
-//                    task.deadline.isBefore(now) -> NotificationType.OVERDUE
-//                    task.deadline.isAfter(now) && task.deadline.isBefore(threshold) ->
-//                        NotificationType.UPCOMING
-//                    else -> null
-//                }
-//
-//                if (notificationType != null) {
-//                    tasksToNotify.add(task.copy(notificationType = notificationType))
-//
-//                    if (!isNotificationShown) {
-//                        NotificationUtils.showTaskNotification(
-//                            requireContext(),
-//                            task.copy(notificationType = notificationType)
-//                        )
-//                    }
-//                }
-//            }
-//        }
-//        taskViewModel.updateTasksForNotification(tasksToNotify)
     }
 
     override fun onDestroyView() {

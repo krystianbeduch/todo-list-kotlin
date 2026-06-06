@@ -1,0 +1,100 @@
+<resources>
+    <!-- UI -->
+    <string name="title_home">Головна</string>
+    <string name="title_add_task">Додати завдання</string>
+    <string name="title_notifications">Сповіщення</string>
+
+    <string name="change_status">Змінити статус</string>
+    <string name="delete_task">Видалити</string>
+    <string name="edit_task">Редагувати</string>
+
+    <string name="task_form_header_text">Додати нове завдання</string>
+    <string name="task_title_hint">Назва завдання</string>
+    <string name="task_deadline_hint">Дедлайн</string>
+    <string name="task_priority_label_text">Оберіть пріоритет:</string>
+
+    <string name="save_task_button_text">Зберегти завдання</string>
+    <string name="add_attachment">Додати вкладення</string>
+    <string name="delete_attachment">Видалити вкладення</string>
+    <string name="show_attachment">Переглянути вкладення</string>
+    <string name="attachment_icon">Іконка вкладення</string>
+    <string name="nav_more_text">Більше</string>
+    <string name="menu_import_tasks">Імпортувати завдання</string>
+    <string name="menu_export_tasks">Експортувати завдання</string>
+    <string name="menu_change_lang">Змінити мову</string>
+    <string name="menu_delete_all">Видалити все</string>
+    <string name="menu_item_lang">Мова</string>
+    <string name="menu_item_sort">Сортування</string>
+
+    <!-- Code -->
+    <!-- MainActivity -->
+    <string name="incorrect_file_format">Неправильний формат файлу</string>
+    <string name="select_file_format">Оберіть формат файлу:</string>
+    <string name="select_file">Оберіть файл: %1$s</string>
+    <string name="select_lang">Оберіть мову:</string>
+    <string name="delete_all_title">Видалення всіх завдань</string>
+    <string name="delete_all_message">Ви справді хочете видалити всі завдання?</string>
+
+    <!-- EditActivity -->
+    <string name="error_no_task_id">Помилка: немає ID завдання</string>
+    <string name="edit_task_header">Редагувати завдання</string>
+    <string name="no_task_found">Завдання не знайдено</string>
+
+    <!-- NotificationType -->
+    <string name="text_notification_upcoming">Наближається дедлайн завдання</string>
+    <string name="text_notification_overdue">Термін завдання минув</string>
+
+    <!-- Priority -->
+    <string name="high_priority">Високий</string>
+    <string name="medium_priority">Середній</string>
+    <string name="low_priority">Низький</string>
+
+    <!-- SortType -->
+    <string name="sort_created_at">Дата додавання</string>
+    <string name="sort_title">Назва</string>
+    <string name="sort_deadline">Дедлайн</string>
+    <string name="sort_priority">Пріоритет</string>
+    <string name="sort_status">Статус</string>
+
+    <!-- TaskAdapter -->
+    <string name="deadline_prefix">Дедлайн: %1$s</string>
+
+    <!-- HomeFragment -->
+    <string name="confirm_delete_title">Підтвердження видалення</string>
+    <string name="confirm_delete_task_message">Ви впевнені, що хочете видалити завдання</string>
+    <string name="yes">Так</string>
+    <string name="no">Ні</string>
+    <string name="no_attachments_toast">Немає вкладень</string>
+    <string name="delete_attachment_alertdialog_title">Видалити вкладення</string>
+    <string name="delete_attachment_alertdialog_message">Ви впевнені, що хочете видалити вибране вкладення?</string>
+    <string name="cancel">Скасувати</string>
+    <string name="select_attachment">Оберіть вкладення</string>
+    <string name="attachment_added">Вкладення додано</string>
+    <string name="no_app_to_open_file">Немає програми для відкриття файлу</string>
+    <string name="attachment_deleted">Вкладення видалено</string>
+    <string name="error_deleting_attachment">Помилка видалення вкладення</string>
+
+    <!-- BaseTaskAdapter -->
+    <string name="created_prefix">Створено: %1$s</string>
+    <string name="priority_prefix">Пріоритет: %1$s</string>
+
+    <!-- TaskFormHelper -->
+    <string name="complete_all_fields">Заповніть усі поля</string>
+    <string name="incorrect_date_format">Неправильний формат дати. Використовуйте: dd.MM.yyyy HH:mm</string>
+    <string name="incorrect_date">Дата має бути в майбутньому</string>
+    <string name="task_updated">Завдання оновлено</string>
+    <string name="task_added">Завдання додано</string>
+
+    <!-- FileService -->
+    <string name="csv_header">ID;Назва;Дедлайн;Пріоритет;Статус;Дата створення</string>
+    <string name="error_export_csv">Помилка експорту CSV</string>
+    <string name="error_import_csv">Помилка імпорту CSV</string>
+    <string name="error_export_json">Помилка експорту JSON</string>
+    <string name="error_import_json">Помилка імпорту JSON</string>
+    <string name="error_export_xml">Помилка експорту XML</string>
+    <string name="error_import_xml">Помилка імпорту XML</string>
+    <string name="exported">Експортовано</string>
+    <string name="export_error">Помилка експорту</string>
+    <string name="import_error">Помилка імпорту</string>
+    <string name="is_cannot_reconstructed">Не вдалося відновити InputStream з URI</string>
+</resources>

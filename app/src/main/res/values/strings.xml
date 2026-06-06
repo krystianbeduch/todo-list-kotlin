@@ -1,102 +1,113 @@
 <resources>
+    <string name="lang_english" translatable="false">English</string>
+    <string name="lang_polish" translatable="false">Polski</string>
+    <string name="lang_german" translatable="false">Deutsch</string>
+    <string name="lang_spanish" translatable="false">Español</string>
+    <string name="lang_french" translatable="false">Français</string>
+    <string name="lang_italian" translatable="false">Italiano</string>
+    <string name="lang_portuguese" translatable="false">Português</string>
+    <string name="lang_turkish" translatable="false">Türkçe</string>
+    <string name="lang_ukrainian" translatable="false">Українська</string>
+    <string name="lang_arabic" translatable="false">العربية</string>
+
     <!-- UI -->
-    <string name="app_name">To-Do Lis Kt</string>
+    <string name="app_name" translatable="false">To-Do Lis Kt</string>
     <string name="title_home">Home</string>
-    <string name="title_add_task">Dodaj zadanie</string>
-    <string name="title_notifications">Powiadomienia</string>
+    <string name="title_add_task">Add task</string>
+    <string name="title_notifications">Notification</string>
 
-    <string name="change_status">Zmień status</string>
-    <string name="task_done_text">✔</string>
-    <string name="delete_task">Usuń</string>
-    <string name="edit_task">Edytuj</string>
+    <string name="change_status">Change status</string>
+    <string name="task_done_text" translatable="false">✔</string>
+    <string name="delete_task">Delete</string>
+    <string name="edit_task">Edit</string>
 
-    <string name="task_form_header_text">Dodaj nowe zadanie</string>
-    <string name="task_title_hint">Tytuł zadania</string>
-    <string name="task_deadline_hint">Termin</string>
-    <string name="task_priority_label_text">Wybierz priorytet:</string>
+    <string name="task_form_header_text">Add new task</string>
+    <string name="task_title_hint">Task title</string>
+    <string name="task_deadline_hint">Deadline</string>
+    <string name="task_priority_label_text">Choose priority:</string>
 
-    <string name="save_task_button_text">Zapisz zadanie</string>
-    <string name="add_attachment">Dodaj załącznik</string>
-    <string name="delete_attachment">Usuń załącznik</string>
-    <string name="show_attachment">Zobacz załącznik</string>
-    <string name="attachment_icon">Ikonka załącznika</string>
-    <string name="nav_more_text">Więcej</string>
-    <string name="menu_import_tasks">Importuj zadania</string>
-    <string name="menu_export_tasks">Eksportuj zadania</string>
-    <string name="menu_change_lang">Zmień język</string>
-    <string name="menu_delete_all">Usuń wszystko</string>
-    <string name="menu_item_lang">Język</string>
-    <string name="menu_item_sort">Sortuj</string>
+    <string name="save_task_button_text">Save task</string>
+    <string name="add_attachment">Add attachment</string>
+    <string name="delete_attachment">Delete attachment</string>
+    <string name="show_attachment">Show attachment</string>
+    <string name="attachment_icon">Attachment icon</string>
+    <string name="nav_more_text">More</string>
+    <string name="menu_import_tasks">Import tasks</string>
+    <string name="menu_export_tasks">Export tasks</string>
+    <string name="menu_change_lang">Change language</string>
+    <string name="menu_delete_all">Delete all</string>
+    <string name="menu_item_lang">Language</string>
+    <string name="menu_item_sort">Sort</string>
 
     <!-- Code -->
     <!-- MainActivity -->
-    <string name="incorrect_file_format">Błędny format pliku</string>
-    <string name="select_file_format">Wybierz format pliku:</string>
-    <string name="select_file">Wybierz plik: %1$s</string>
-    <string name="select_lang">Wybierz język:</string>
-    <string name="delete_all_title">Usuwanie wszystkich zadań</string>
-    <string name="delete_all_message">Czy na pewno chcesz usunąć wszystkie zadania</string>
+    <string name="incorrect_file_format">Incorrect file format</string>
+    <string name="select_file_format">Select file format:</string>
+    <string name="select_file">Select file %1$s</string>
+    <string name="select_lang">Select language:</string>
+    <string name="delete_all_title">Delete all tasks</string>
+    <string name="delete_all_message">Are you sure you want to delete all tasks?</string>
 
     <!-- EditActivity -->
-    <string name="error_no_task_id">Błąd: brak ID zadania</string>
-    <string name="edit_task_header">Edytuj zadanie</string>
-    <string name="no_task_found">Nie znaleziono zadania</string>
+    <string name="error_no_task_id">Error: no task ID</string>
+    <string name="edit_task_header">Edit task</string>
+    <string name="no_task_found">No task found</string>
 
     <!-- NotificationType -->
-    <string name="text_notification_upcoming">Zbliżający się termin zadania</string>
-    <string name="text_notification_overdue">Minął termin zadania</string>
+    <string name="text_notification_upcoming">Upcoming task deadline</string>
+    <string name="text_notification_overdue">Task deadline has passed</string>
 
     <!-- Priority -->
-    <string name="high_priority">Wysoki</string>
-    <string name="medium_priority">Średni</string>
-    <string name="low_priority">Niski</string>
+    <string name="high_priority">High</string>
+    <string name="medium_priority">Medium</string>
+    <string name="low_priority">Low</string>
 
     <!-- SortType -->
-    <string name="sort_created_at">Data dodania</string>
-    <string name="sort_title">Tytuł</string>
-    <string name="sort_deadline">Termin</string>
-    <string name="sort_priority">Priorytet</string>
+    <string name="sort_created_at">Addition date</string>
+    <string name="sort_title">Title</string>
+    <string name="sort_deadline">Deadline</string>
+    <string name="sort_priority">Priority</string>
     <string name="sort_status">Status</string>
 
     <!-- TaskAdapter -->
-    <string name="deadline_prefix">Termin: %1$s</string>
+    <string name="deadline_prefix">Deadline: %1$s</string>
 
     <!-- HomeFragment -->
-    <string name="confirm_delete_title">Potwierdzenie usunięcia</string>
-    <string name="confirm_delete_task_message">Czy na pewno chcesz usunąć zadanie</string>
-    <string name="yes">Tak</string>
-    <string name="no">Nie</string>
-    <string name="no_attachments_toast">Brak załączników</string>
-    <string name="delete_attachment_alertdialog_title">Usuń załącznik</string>
-    <string name="delete_attachment_alertdialog_message">Czy na pewno chcesz usunąć wybrany załącznik?</string>
-    <string name="cancel">Anuluj</string>
-    <string name="select_attachment">Wybierz załącznik</string>
-    <string name="attachment_added">Dodano załącznik</string>
-    <string name="no_app_to_open_file">Brak aplikacji do otwarcia pliku</string>
-    <string name="attachment_deleted">Usunięto załącznik</string>
-    <string name="error_deleting_attachment">Błąd usuwania załącznika</string>
+    <string name="confirm_delete_title">Confirmation of deletion</string>
+    <string name="confirm_delete_task_message">Are you sure you want to delete the task</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="no_attachments_toast">No attachments</string>
+    <string name="delete_attachment_alertdialog_title">Delete attachment</string>
+    <string name="delete_attachment_alertdialog_message">Are you sure you want to delete the selected attachment?</string>
+    <string name="cancel">Cancel</string>
+    <string name="select_attachment">Select attachment</string>
+    <string name="attachment_added">Attachment added</string>
+    <string name="no_app_to_open_file">No application to open file</string>
+    <string name="attachment_deleted">Attachment deleted</string>
+    <string name="error_deleting_attachment">Error deleting attachment</string>
 
     <!-- BaseTaskAdapter -->
-    <string name="created_prefix">Utworzono: %1$s</string>
-    <string name="priority_prefix">Priorytet: %1$s</string>
+    <string name="created_prefix">Created at: %1$s</string>
+    <string name="priority_prefix">Priority: %1$s</string>
 
     <!-- TaskFormHelper -->
-    <string name="complete_all_fields">Uzupełnij wszystkie pola</string>
-    <string name="incorrect_date_format">Nieprawdiłowy format daty. Użyj: dd.MM.yyyy HH:mm</string>
-    <string name="incorrect_date">Termin musi być w przyszłości</string>
-    <string name="task_updated">Zadanie zaktualizowane</string>
-    <string name="task_added">Zadanie dodanie</string>
+    <string name="complete_all_fields">Complete all fields</string>
+    <string name="incorrect_date_format">Incorrect date format. Use: dd.MM.yyyy HH:mm</string>
+    <string name="incorrect_date">The date must be in the future</string>
+    <string name="task_updated">Task updated</string>
+    <string name="task_added">Task added</string>
 
     <!-- FileService -->
-    <string name="csv_header">ID;Tytuł;Termin;Priorytet;Status;Data dodania</string>
-    <string name="error_export_csv">Błąd eksportu CSV</string>
-    <string name="error_import_csv">Błąd importu CSV</string>
-    <string name="error_export_json">Błąd eksportu JSON</string>
-    <string name="error_import_json">Błąd importu JSON</string>
-    <string name="error_export_xml">Błąd eksportu XML</string>
-    <string name="error_import_xml">Błąd importu XML</string>
-    <string name="exported">Wyeksportowano</string>
-    <string name="export_error">Błąd exportu</string>
-    <string name="import_error">Błąd importu</string>
-    <string name="is_cannot_reconstructed">Nie można odtworzyć InputStream z URI</string>
+    <string name="csv_header">ID;Title;Deadline;Priority;Status;Created at</string>
+    <string name="error_export_csv">Error CSV export</string>
+    <string name="error_import_csv">Error CSV import</string>
+    <string name="error_export_json">Error JSON export</string>
+    <string name="error_import_json">Error JSON import</string>
+    <string name="error_export_xml">Error XML export</string>
+    <string name="error_import_xml">Error XML import</string>
+    <string name="exported">Exported</string>
+    <string name="export_error">Export error</string>
+    <string name="import_error">Import error</string>
+    <string name="is_cannot_reconstructed">InputStream cannot be reconstructed from URI</string>
 </resources>
