@@ -217,7 +217,6 @@ git clone https://github.com/krystianbeduch/todo-list-kotlin.git
 - Press __Run__ (`Shift + F10` or the green button <img src="https://github.com/krystianbeduch/todo-list-kotlin/blob/main/readme-images/green-play-button.png" alt="Green button" title="Green button" height="20">) to launch the app
 
 ### 5. Optional sample data
-### 5. Optional sample data
 > [!CAUTION]
 > The `enableDummyTasks` flag in [`MainActivity`](./app/src/main/java/com/krybed/todolist/presentation/activity/MainActivity.kt) controls whether sample tasks are loaded on startup.
 > 
